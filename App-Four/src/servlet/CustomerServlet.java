@@ -12,7 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@WebServlet(urlPatterns = "/pages/customer")
+@WebServlet(urlPatterns = "/customer")
 public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -66,7 +66,7 @@ public class CustomerServlet extends HttpServlet {
                 boolean isDeleted = pst2.executeUpdate() > 0;
                 break;
         }
-        resp.sendRedirect("customer_form.jsp");
+        resp.sendRedirect("customer_form.html");
 
         } catch (ClassNotFoundException| SQLException e) {
             e.printStackTrace();
