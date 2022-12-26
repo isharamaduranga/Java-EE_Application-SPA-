@@ -30,36 +30,26 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
-        ArrayList<CustomerDTO> allCustomers = new ArrayList();
-
         try {
-            PreparedStatement pstm = DBConnection.getDbConnection().getConnection().prepareStatement("select * from customer");
-            ResultSet rst = pstm.executeQuery();
-
-            while (rst.next()) {
-                String id = rst.getString("id");
-                String name = rst.getString("name");
-                String address = rst.getString("address");
-                double salary = rst.getDouble("salary");
-
-                allCustomers.add(new CustomerDTO(id, name, address, salary));
-            }
 
             //How to Manipulate JSON using Json Processing
             JsonArrayBuilder array = Json.createArrayBuilder();
 
-            for (CustomerDTO customer : allCustomers) {
+            PreparedStatement pstm = DBConnection.getDbConnection().getConnection().prepareStatement("select * from customer");
+            ResultSet rst = pstm.executeQuery();
+
+            while (rst.next()) {
+
                 JsonObjectBuilder object = Json.createObjectBuilder();
-                object.add("id", customer.getId());
-                object.add("name", customer.getName());
-                object.add("address", customer.getAddress());
-                object.add("salary", customer.getSalary());
+                object.add("id", rst.getString("id"));
+                object.add("name", rst.getString("name"));
+                object.add("address", rst.getString("address"));
+                object.add("salary", rst.getDouble("salary"));
 
                 array.add(object.build());
             }
 
-            /*  resp.setContentType("application/json"); //MIME TYPE*/
+            resp.setContentType("application/json"); //MIME TYPE*/
             resp.getWriter().print(array.build());
 
         } catch (SQLException e) {
@@ -78,12 +68,10 @@ public class CustomerServlet extends HttpServlet {
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
 
-        String option = req.getParameter("option");
-
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/d99", "root", "1234");
-            PreparedStatement pst = connection.prepareStatement("insert into customer values(?,?,?,?)");
+            PreparedStatement pst =
+                    DBConnection.getDbConnection().getConnection().prepareStatement("insert into customer values(?,?,?,?)");
+
             pst.setObject(1, id);
             pst.setObject(2, name);
             pst.setObject(3, address);
@@ -101,10 +89,9 @@ public class CustomerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
         try{
+            PreparedStatement pst2 =
+                    DBConnection.getDbConnection().getConnection().prepareStatement("delete from customer where id=?");
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection2 = DriverManager.getConnection("jdbc:mysql://localhost:3306/d99", "root", "1234");
-            PreparedStatement pst2 = connection2.prepareStatement("delete from customer where id=?");
             pst2.setObject(1, id);
             boolean isDeleted = pst2.executeUpdate() > 0;
 
@@ -124,9 +111,9 @@ public class CustomerServlet extends HttpServlet {
         String salary = req.getParameter("salary");
 
         try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection connection1 = DriverManager.getConnection("jdbc:mysql://localhost:3306/d99", "root", "1234");
-            PreparedStatement pst1 = connection1.prepareStatement("update customer  set name=?,address=?, salary=? where id=?");
+            PreparedStatement pst1 =
+                    DBConnection.getDbConnection().getConnection().prepareStatement("update customer  set name=?,address=?, salary=? where id=?");
+
             pst1.setObject(4, id);
             pst1.setObject(1, name);
             pst1.setObject(2, address);
