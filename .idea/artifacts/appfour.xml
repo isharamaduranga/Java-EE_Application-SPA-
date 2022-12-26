@@ -1,0 +1,16 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="appfour">
+    <output-path>$PROJECT_DIR$/out/artifacts/appfour</output-path>
+    <root id="archive" name="appfour.war">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="App-Four" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="mysql-connector-java-8.0.22" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="App-Four/web/Web" />
+    </root>
+  </artifact>
+</component>
