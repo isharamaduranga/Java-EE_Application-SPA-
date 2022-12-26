@@ -1,10 +1,4 @@
-/**
- * @author : Ishara Maduarnga
- * Project Name: JavaEE
- * Date        : 11/27/2022
- * Time        : 3:21 PM
- * Year        : 2022
- */
+/*
 
 package servlet;
 
@@ -82,3 +76,4 @@ public class CustomerServlet extends HttpServlet {
 
     }
 }
+*/
