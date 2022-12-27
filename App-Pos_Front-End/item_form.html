@@ -149,6 +149,7 @@
 <script src="assests/jquery/jquery-3.6.1.min.js"></script>
 
 <script>
+    let baseURL="http://localhost:8080/pos/";
 
     loadAllItems();
 
@@ -156,7 +157,7 @@
         let itmFormData = $("#itemForm").serialize();
 
         $.ajax({
-            url: "item",
+            url: baseURL+"item",
             method:"post",
             data:itmFormData,
             dataType: "json",
@@ -183,7 +184,7 @@
     $("#btnDeleteItem").click(function () {
         let itmCode = $('#txtItemCode').val();
       $.ajax({
-          url:"item?code="+itmCode,
+          url: baseURL+"item?code="+itmCode,
           method: "delete",
           dataType:"json",
           success:function (resp) {
@@ -211,7 +212,7 @@
         }
 
        $.ajax({
-           url:"item",
+           url: baseURL+"item",
            method:"put",
            contentType:"application/json",
            data: JSON.stringify(item),
@@ -235,7 +236,7 @@
     function loadAllItems() {
         $("#itemTable").empty();
         $.ajax({
-            url: "item",
+            url: baseURL+"item",
             dataType: "json",
             success: function (resp) {
                 for (let itm of resp.data) {
