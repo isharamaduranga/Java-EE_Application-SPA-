@@ -497,7 +497,7 @@
            url: "customer",
            dataType:"json",
            success:function (resp){
-               for (let cus of resp) {
+               for (let cus of resp.data) {
                    $("#customerTable") .append("<tr> <td>"+cus.id+"</td> <td>"+cus.name+"</td> <td>"+cus.address+"</td> <td>"+cus.salary+"</td> </tr>")
                }
                setData_Bind_Row_Events();
