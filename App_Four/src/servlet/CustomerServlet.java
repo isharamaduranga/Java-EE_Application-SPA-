@@ -30,7 +30,7 @@ public class CustomerServlet extends HttpServlet {
 
         try {
             /** Cross Policy Header */
-            resp.addHeader("Access-Control-Allow-Origin","*");
+            resp.addHeader("Access-Control-Allow-Origin", "*");
 
             //How to Manipulate JSON using Json Processing
             JsonArrayBuilder array = Json.createArrayBuilder();
@@ -77,7 +77,8 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
+        /** Cross Policy Header */
+        resp.addHeader("Access-Control-Allow-Origin", "*");
 
         String id = req.getParameter("id");
         String name = req.getParameter("name");
