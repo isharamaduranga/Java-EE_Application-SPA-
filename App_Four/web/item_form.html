@@ -290,19 +290,18 @@
 
     $('#txtItemName').keydown(function (event) {
         if (event.which == 13) {
-            $('#txtItemPrice').focus();
-        }
-    });
-
-    $('#txtItemPrice').keydown(function (event) {
-        if (event.which == 13) {
             $('#txtItemQty').focus();
         }
     });
 
     $('#txtItemQty').keydown(function (event) {
         if (event.which == 13) {
-            saveItem();
+            $('#txtItemPrice').focus();
+        }
+    });
+
+    $('#txtItemPrice').keydown(function (event) {
+        if (event.which == 13) {
             let option = confirm("Do you  Want To Save Item ?");
 
             if (option) {
