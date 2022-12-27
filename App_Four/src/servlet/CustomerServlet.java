@@ -17,7 +17,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 @WebServlet(urlPatterns = "/customer")
@@ -46,12 +48,25 @@ public class CustomerServlet extends HttpServlet {
             }
 
             resp.setContentType("application/json"); //MIME TYPE*/
-            resp.getWriter().print(array.build());
+
+            JsonObjectBuilder jsonRespObj = Json.createObjectBuilder();
+            jsonRespObj.add("state", "done");
+            jsonRespObj.add("message", "Successfully load..");
+            jsonRespObj.add("data", array.build());
+            resp.getWriter().print(jsonRespObj.build());
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(400);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(500);
         }
 
 
@@ -75,34 +90,71 @@ public class CustomerServlet extends HttpServlet {
 
             boolean isSaved = pst.executeUpdate() > 0;
 
+            if (isSaved) {
 
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
+                JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+                jsonObj.add("state", "done");
+                jsonObj.add("message", "Successfully Added Record...");
+                resp.getWriter().print(jsonObj.build());
+            }
+
+        } catch (ClassNotFoundException e) {
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(500);
+
+        } catch (SQLException e) {
+
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(404);
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String id = req.getParameter("id");
-        try{
+        try {
             PreparedStatement pst2 =
                     DBConnection.getDbConnection().getConnection().prepareStatement("delete from customer where id=?");
 
             pst2.setObject(1, id);
             boolean isDeleted = pst2.executeUpdate() > 0;
 
-        }catch(ClassNotFoundException e){
-            e.printStackTrace();
-        }catch(SQLException e){
-            e.printStackTrace();
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            if (isDeleted) {
+                jsonObj.add("state", "done");
+                jsonObj.add("message", "Successfully Deleted..");
+            } else {
+                jsonObj.add("state", "error");
+                jsonObj.add("message", "No Such a Customer To Delete !!!.");
+                resp.setStatus(400);
+            }
+            resp.getWriter().print(jsonObj.build());
+
+        } catch (ClassNotFoundException e) {
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(500);
+
+        } catch (SQLException e) {
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(400);
         }
 
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
 
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject customer = reader.readObject();
@@ -112,7 +164,7 @@ public class CustomerServlet extends HttpServlet {
         String address = customer.getString("address");
         String salary = customer.getString("salary");
 
-        try{
+        try {
             PreparedStatement pst1 =
                     DBConnection.getDbConnection().getConnection().prepareStatement("update customer  set name=?,address=?, salary=? where id=?");
 
@@ -122,10 +174,31 @@ public class CustomerServlet extends HttpServlet {
             pst1.setObject(3, salary);
             boolean isUpdated = pst1.executeUpdate() > 0;
 
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }catch (SQLException e){
-            e.printStackTrace();
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            if (isUpdated) {
+
+                jsonObj.add("state", "done");
+                jsonObj.add("message", "Successfully Updated...");
+
+            } else {
+                jsonObj.add("state", "error");
+                jsonObj.add("message", "No Such a Customer To Updated !!!.");
+                resp.setStatus(400);
+            }
+            resp.getWriter().print(jsonObj.build());
+        } catch (ClassNotFoundException e) {
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(500);
+
+        } catch (SQLException e) {
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state", "error");
+            jsonObj.add("message", e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(404);
         }
 
     }

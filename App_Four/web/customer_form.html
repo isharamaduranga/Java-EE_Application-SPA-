@@ -113,6 +113,8 @@
         <button class="btn btn-warning " id="btnGetAllCustomer" type="button">Get All Customer</button>
         <button class="btn btn-success" id="btnUpdateCustomer">Update Customer</button>
         <button class="btn btn-danger" id="btnDeleteCustomer">Delete Customer</button>
+        <button class="btn btn-info" id="btnClear">Clear</button>
+
     </section>
 
     <!-- Section of Search Bar -->
@@ -419,9 +421,17 @@
             url:"customer",
             method:"post",
             data:formData,
-            success:function () {
+            dataType: "json",
+            success:function (resp) {
+                alert(resp.message);
                 loadAllCustomers();
                 clearTextFields()
+            },
+            error:function (error) {
+
+                let JsnErrObj = JSON.parse(error.responseText);
+                alert(JsnErrObj.message);
+
             }
 
         });
@@ -437,8 +447,13 @@
         $.ajax({
             url:"customer?id="+cusID,
             method: "delete",
-            success:function () {
+            dataType:"json",
+            success:function (resp) {
+                alert(resp.message)
                 loadAllCustomers();
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
             }
         });
     });
@@ -461,11 +476,19 @@
             method:"put",
             contentType: "application/json",
             data: JSON.stringify(customer),
-
-            success:function () {
+            dataType:"json",
+            success:function (resp) {
+                alert(resp.message);
                 loadAllCustomers();
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
             }
         });
+    });
+
+    $("#btnClear").click(function () {
+        clearTextFields()
     });
 
    function loadAllCustomers(){
