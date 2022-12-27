@@ -74,6 +74,9 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        /** Cross Policy Header */
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+
         String code = req.getParameter("code");
         String description = req.getParameter("description");
         String qtyOnHand = req.getParameter("qtyOnHand");
