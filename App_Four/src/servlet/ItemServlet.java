@@ -118,6 +118,9 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        /** Cross Policy Header */
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+
         String code = req.getParameter("code");
         try {
             PreparedStatement pst =
@@ -201,6 +204,8 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        /** Cross Policy Header */
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+        resp.addHeader("Access-Control-Allow-Methods","DELETE");
     }
 }
