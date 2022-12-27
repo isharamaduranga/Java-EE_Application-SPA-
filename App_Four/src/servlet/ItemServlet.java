@@ -25,8 +25,14 @@ import java.sql.SQLException;
 public class ItemServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JsonArrayBuilder array = Json.createArrayBuilder();
+
         try {
+            /** Cross Policy Header */
+            resp.addHeader("Access-Control-Allow-Origin", "*");
+
+            //How to Manipulate JSON using Json Processing
+            JsonArrayBuilder array = Json.createArrayBuilder();
+
             PreparedStatement pstm = DBConnection.getDbConnection().getConnection().prepareStatement("select * from item");
             ResultSet rst = pstm.executeQuery();
             while (rst.next()) {
