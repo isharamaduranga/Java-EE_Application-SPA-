@@ -335,7 +335,21 @@ function clearTextFieldsItem() {
         clearItemFields();
     });
 
-
+    $("#btnDeleteItem").click(function () {
+        let itmCode = $('#txtItemCode').val();
+      $.ajax({
+          url:"item?code="+itmCode,
+          method: "delete",
+          dataType:"json",
+          success:function (resp) {
+              alert(resp.message);
+              loadAllItems();
+          },
+          error:function (error) {
+              alert(JSON.parse(error.responseText).message);
+          }
+      });
+    });
 
 
     $("#btnClearItem").click(function () {
