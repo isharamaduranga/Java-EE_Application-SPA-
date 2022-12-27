@@ -307,19 +307,41 @@ function clearTextFieldsItem() {
 <script>
     loadAllItems();
 
+    function saveItems() {
+        let itmFormData = $("#itemForm").serialize();
+
+        $.ajax({
+            url: "item",
+            method:"post",
+            data:itmFormData,
+            dataType: "json",
+            success:function (resp) {
+                alert(resp.message);
+                loadAllItems();
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
+
+            }
+        });
+    }
+
+    $("#btnItemSave").click(function () {
+      saveItems();
+    });
+
     $("#btnGetAllItem").click(function () {
         loadAllItems();
         clearItemFields();
     });
 
-    $("#btnItemSave").click(function () {
 
-    });
 
 
     $("#btnClearItem").click(function () {
         clearItemFields();
     });
+
 
     function loadAllItems() {
         $("#itemTable").empty();

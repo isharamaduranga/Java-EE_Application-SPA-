@@ -100,7 +100,7 @@ public class CustomerServlet extends HttpServlet {
 
                 JsonObjectBuilder jsonObj = Json.createObjectBuilder();
                 jsonObj.add("state", "done");
-                jsonObj.add("message", "Successfully Added Record...");
+                jsonObj.add("message", "Successfully Added Customer Record...");
                 resp.getWriter().print(jsonObj.build());
             }
 

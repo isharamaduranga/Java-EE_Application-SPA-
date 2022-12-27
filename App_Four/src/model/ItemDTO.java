@@ -12,12 +12,12 @@ public class ItemDTO {
     private String code;
     private String description;
     private int qtyOnHand;
-    private String unitPrice;
+    private double unitPrice;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(String code, String description, int qtyOnHand, String unitPrice) {
+    public ItemDTO(String code, String description, int qtyOnHand, double unitPrice) {
         this.code = code;
         this.description = description;
         this.qtyOnHand = qtyOnHand;
@@ -48,11 +48,11 @@ public class ItemDTO {
         this.qtyOnHand = qtyOnHand;
     }
 
-    public String getUnitPrice() {
+    public double getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(String unitPrice) {
+    public void setUnitPrice(double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
@@ -62,7 +62,7 @@ public class ItemDTO {
                 "code='" + code + '\'' +
                 ", description='" + description + '\'' +
                 ", qtyOnHand=" + qtyOnHand +
-                ", unitPrice='" + unitPrice + '\'' +
+                ", unitPrice=" + unitPrice +
                 '}';
     }
 }

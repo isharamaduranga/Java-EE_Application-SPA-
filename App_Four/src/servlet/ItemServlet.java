@@ -70,10 +70,47 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        String code = req.getParameter("code");
+        String description = req.getParameter("description");
+        String qtyOnHand = req.getParameter("qtyOnHand");
+        String unitPrice = req.getParameter("unitPrice");
+
+        try {
+            PreparedStatement pst =
+                    DBConnection.getDbConnection().getConnection().prepareStatement("insert into item values(?,?,?,?)");
+            pst.setObject(1,code);
+            pst.setObject(2,description);
+            pst.setObject(3,qtyOnHand);
+            pst.setObject(4,unitPrice);
+
+            boolean isSaved = pst.executeUpdate() > 0;
+
+            if (isSaved) {
+                JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+                jsonObj.add("state","done");
+                jsonObj.add("message","Successfully Added Item Record...");
+                resp.getWriter().print(jsonObj.build());
+            }
+
+        } catch (SQLException e) {
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state","error");
+            jsonObj.add("message",e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(400);
+
+        } catch (ClassNotFoundException e) {
+            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
+            jsonObj.add("state","error");
+            jsonObj.add("message",e.getMessage());
+            resp.getWriter().print(jsonObj.build());
+            resp.setStatus(500);
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
 
     }
 
