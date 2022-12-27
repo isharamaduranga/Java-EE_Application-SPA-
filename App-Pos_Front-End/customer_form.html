@@ -157,6 +157,7 @@
 <script src="assests/jquery/jquery-3.6.1.min.js"></script>
 
 <script>
+    let baseURL="http://localhost:8080/pos/";
     loadAllCustomers();
 
     function saveCustomer() {
@@ -165,7 +166,7 @@
         let formData = $("#customerForm").serialize();
 
         $.ajax({
-            url:"customer",
+            url:baseURL+"customer",
             method:"post",
             data:formData,
             dataType: "json",
@@ -194,7 +195,7 @@
     $("#btnDeleteCustomer").click(function () {
         let cusID = $('#txtCusId').val();
         $.ajax({
-            url:"customer?id="+cusID,
+            url:baseURL+"customer?id="+cusID,
             method: "delete",
             dataType:"json",
             success:function (resp) {
@@ -221,7 +222,7 @@
           salary:customerSalary
       }
         $.ajax({
-            url:"customer",
+            url:baseURL+"customer",
             method:"put",
             contentType: "application/json",
             data: JSON.stringify(customer),
@@ -243,7 +244,7 @@
    function loadAllCustomers(){
        $("#customerTable").empty()
        $.ajax({
-           url: "customer",
+           url: baseURL+"customer",
            dataType:"json",
            success:function (resp){
                for (let cus of resp.data) {
