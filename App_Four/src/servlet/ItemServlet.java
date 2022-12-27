@@ -158,6 +158,9 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        /** Cross Policy Header */
+        resp.addHeader("Access-Control-Allow-Origin", "*");
+
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject item = reader.readObject();
 
@@ -204,8 +207,10 @@ public class ItemServlet extends HttpServlet {
 
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
         /** Cross Policy Header */
         resp.addHeader("Access-Control-Allow-Origin", "*");
-        resp.addHeader("Access-Control-Allow-Methods","DELETE");
+        resp.addHeader("Access-Control-Allow-Methods","DELETE,PUT");
+        resp.addHeader("Access-Control-Allow-Headers","Content-Type");
     }
 }
