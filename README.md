@@ -1,4 +1,4 @@
-# Java-EE_Application ~SPA~
+# Java-EE_Application (S_P_A)
 
 #### Also,This website contains the source files that are used to build the Java Platform, Enterprise Edition (Java EE) 8
 
