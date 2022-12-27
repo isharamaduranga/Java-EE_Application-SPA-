@@ -285,6 +285,8 @@
     }
 
     /** Text Fields Key down to focus functionalities... */
+
+    //disable tab key of all input fields using grouping selector
     $("#txtCusId,#txtCusName,#txtCusAddress,#txtCusSalary").on('keydown', function (event) {
         if (event.key == "Tab") {
             event.preventDefault();
