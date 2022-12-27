@@ -109,18 +109,12 @@
 
     <!-- Section of Button Group -->
     <section class="container-fluid mt-1 button ">
-        <button class="btn btn-primary" id="btnCustomerSave" formaction="customer?option=add" formmethod="post"
-                form="customerForm">Add Customer
-        </button>
-        <button class="btn btn-warning " id="btnGetAllCustomer" formaction="customer_form   .jsp" formmethod="get"
-                form="customerForm">Get All Customer
-        </button>
-        <button class="btn btn-success" id="btnUpdateCustomer" formaction="customer?option=update" formmethod="post"
-                form="customerForm">Update Customer
-        </button>
-        <button class="btn btn-danger" id="btnDeleteCustomer" formaction="customer?option=delete" formmethod="post"
-                form="customerForm">Delete Customer
-        </button>
+        <button class="btn btn-primary" id="btnCustomerSave" type="button">Add Customer</button>
+        <button class="btn btn-warning " id="btnGetAllCustomer" type="button">Get All Customer</button>
+        <button class="btn btn-success" id="btnUpdateCustomer">Update Customer</button>
+        <button class="btn btn-danger" id="btnDeleteCustomer">Delete Customer</button>
+        <button class="btn btn-info" id="btnClear">Clear</button>
+
     </section>
 
     <!-- Section of Search Bar -->
@@ -161,7 +155,176 @@
 <!--Import js for bootstrap-->
 <script src="assests/js/bootstrap.min.js"></script>
 <script src="assests/jquery/jquery-3.6.1.min.js"></script>
-<!--<script src="../assests/jquery/script_customer.js"></script>-->
+
+<script>
+    loadAllCustomers();
+
+    function saveCustomer() {
+        //send ajax request to the customer Servlet
+
+        let formData = $("#customerForm").serialize();
+
+        $.ajax({
+            url:"customer",
+            method:"post",
+            data:formData,
+            dataType: "json",
+            success:function (resp) {
+                alert(resp.message);
+                loadAllCustomers();
+
+            },
+            error:function (error) {
+
+                let JsnErrObj = JSON.parse(error.responseText);
+                alert(JsnErrObj.message);
+            }
+        });
+    }
+    
+    $("#btnCustomerSave").click(function () {
+        saveCustomer();
+    });
+
+    $("#btnGetAllCustomer").click(function () {
+        loadAllCustomers();
+        clearTextFields()
+    });
+
+    $("#btnDeleteCustomer").click(function () {
+        let cusID = $('#txtCusId').val();
+        $.ajax({
+            url:"customer?id="+cusID,
+            method: "delete",
+            dataType:"json",
+            success:function (resp) {
+                alert(resp.message)
+                loadAllCustomers();
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
+            }
+        });
+    });
+
+    $("#btnUpdateCustomer").click(function () {
+
+        let customerID = $('#txtCusId').val();
+        let customerName = $('#txtCusName').val();
+        let customerAddress = $('#txtCusAddress').val();
+        let customerSalary = $('#txtCusSalary').val();
+
+      var customer={
+          id:customerID,
+          name:customerName,
+          address:customerAddress,
+          salary:customerSalary
+      }
+        $.ajax({
+            url:"customer",
+            method:"put",
+            contentType: "application/json",
+            data: JSON.stringify(customer),
+            dataType:"json",
+            success:function (resp) {
+                alert(resp.message);
+                loadAllCustomers();
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
+            }
+        });
+    });
+
+    $("#btnClear").click(function () {
+        clearTextFields()
+    });
+
+   function loadAllCustomers(){
+       $("#customerTable").empty()
+       $.ajax({
+           url: "customer",
+           dataType:"json",
+           success:function (resp){
+               for (let cus of resp.data) {
+                   $("#customerTable") .append("<tr> <td>"+cus.id+"</td> <td>"+cus.name+"</td> <td>"+cus.address+"</td> <td>"+cus.salary+"</td> </tr>")
+               }
+               setData_Bind_Row_Events();
+               clearTextFields();
+               $("#txtCusId").focus();
+           }
+       });
+    }
+
+
+    /** BIND ROW CLICK EVENT FUNCTION ... */
+    function setData_Bind_Row_Events() {
+        $('#customerTable>tr').click(function () {
+            let id = $(this).children(":eq(0)").text();
+            let name = $(this).children(":eq(1)").text();
+            let address = $(this).children(":eq(2)").text();
+            let salary = $(this).children(":eq(3)").text();
+
+            /** setting table details values to text fields */
+            $('#txtCusId').val(id);
+            $('#txtCusName').val(name);
+            $('#txtCusAddress').val(address);
+            $('#txtCusSalary').val(salary);
+        });
+        /** Remove Selected Row when double clicked */
+        $("#customerTable>tr").on('dblclick', function () {
+            $(this).remove();
+        });
+    }
+
+    function clearTextFields() {
+        $('#txtCusId').val("");
+        $('#txtCusName').val("");
+        $('#txtCusAddress').val("");
+        $('#txtCusSalary').val("");
+    }
+
+    /** Text Fields Key down to focus functionalities... */
+    $("#txtCusId,#txtCusName,#txtCusAddress,#txtCusSalary").on('keydown', function (event) {
+        if (event.key == "Tab") {
+            event.preventDefault();
+        }
+    });
+
+    $("#txtCusId").on('keydown', function (event) {
+
+        if (event.key == "Enter") {
+            $("#txtCusName").focus();
+        }
+    });
+
+    $("#txtCusName").on('keydown', function (event) {
+        if (event.key == "Enter") {
+            $("#txtCusAddress").focus();
+        }
+    });
+
+    $("#txtCusAddress").on('keydown', function (event) {
+        if (event.key == "Enter") {
+            $("#txtCusSalary").focus();
+        }
+    });
+
+    $("#txtCusSalary").on('keydown', function (event) {
+        if (event.key == "Enter") {
+
+            let option = confirm("Do you  Want To Save Customer ?");
+
+            if (option) {
+                saveCustomer();
+            }
+
+            $("#txtCusId").focus();
+        }
+    });
+    
+    
+</script>
 
 </body>
 </html>
