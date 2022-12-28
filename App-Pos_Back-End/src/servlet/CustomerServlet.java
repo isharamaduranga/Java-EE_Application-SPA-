@@ -30,10 +30,8 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try{
-            /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
-            Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();
-
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
 
             //How to Manipulate JSON using Json Processing
             JsonArrayBuilder array = Json.createArrayBuilder();
@@ -51,8 +49,6 @@ public class CustomerServlet extends HttpServlet {
 
                 array.add(object.build());
             }
-            /** Closed using that connection*/
-            connection.close();
 
             JsonObjectBuilder jsonRespObj = Json.createObjectBuilder();
             jsonRespObj.add("state", "done");
