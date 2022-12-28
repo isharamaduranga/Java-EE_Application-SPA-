@@ -9,6 +9,7 @@
 package servlet;
 
 import db.DBConnection;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,11 +30,15 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try {
+        try{
+            /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+            Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();
+
+
             //How to Manipulate JSON using Json Processing
             JsonArrayBuilder array = Json.createArrayBuilder();
 
-            PreparedStatement pstm = DBConnection.getDbConnection().getConnection().prepareStatement("select * from customer");
+            PreparedStatement pstm = connection.prepareStatement("select * from customer");
             ResultSet rst = pstm.executeQuery();
 
             while (rst.next()) {
@@ -58,15 +64,7 @@ public class CustomerServlet extends HttpServlet {
             jsonObj.add("message", e.getMessage());
             resp.getWriter().print(jsonObj.build());
             resp.setStatus(400);
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
         }
-
-
     }
 
     @Override
