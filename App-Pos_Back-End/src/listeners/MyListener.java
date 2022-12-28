@@ -20,8 +20,8 @@ public class MyListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         BasicDataSource bds = new BasicDataSource();
-        bds.setDriverClassName("");
-        bds.setUrl("");
+        bds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        bds.setUrl("jdbc:mysql://localhost:3306/d99");
         bds.setUsername("root");
         bds.setPassword("1234");
         bds.setMaxTotal(2);// How many Total connections you need inside the pool
