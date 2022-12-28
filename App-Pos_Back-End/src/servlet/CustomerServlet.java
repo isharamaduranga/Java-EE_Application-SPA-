@@ -52,6 +52,8 @@ public class CustomerServlet extends HttpServlet {
                 array.add(object.build());
             }
 
+            connection.close();
+
             JsonObjectBuilder jsonRespObj = Json.createObjectBuilder();
             jsonRespObj.add("state", "done");
             jsonRespObj.add("message", "Successfully load..");
