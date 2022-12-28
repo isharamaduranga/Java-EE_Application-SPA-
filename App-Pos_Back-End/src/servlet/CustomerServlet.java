@@ -29,8 +29,6 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-
-
             //How to Manipulate JSON using Json Processing
             JsonArrayBuilder array = Json.createArrayBuilder();
 
