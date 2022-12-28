@@ -29,8 +29,7 @@ public class CustomerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            /** Cross Policy Header */
-            resp.addHeader("Access-Control-Allow-Origin", "*");
+
 
             //How to Manipulate JSON using Json Processing
             JsonArrayBuilder array = Json.createArrayBuilder();
@@ -48,8 +47,6 @@ public class CustomerServlet extends HttpServlet {
 
                 array.add(object.build());
             }
-
-            resp.setContentType("application/json"); //MIME TYPE*/
 
             JsonObjectBuilder jsonRespObj = Json.createObjectBuilder();
             jsonRespObj.add("state", "done");
@@ -77,8 +74,6 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        /** Cross Policy Header */
-        resp.addHeader("Access-Control-Allow-Origin", "*");
 
         String id = req.getParameter("id");
         String name = req.getParameter("name");
@@ -123,8 +118,6 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        /** Cross Policy Header */
-        resp.addHeader("Access-Control-Allow-Origin", "*");
 
         String id = req.getParameter("id");
         try {
@@ -164,8 +157,7 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        /** Cross Policy Header */
-        resp.addHeader("Access-Control-Allow-Origin", "*");
+
 
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject customer = reader.readObject();
@@ -211,18 +203,5 @@ public class CustomerServlet extends HttpServlet {
             resp.getWriter().print(jsonObj.build());
             resp.setStatus(404);
         }
-
-    }
-
-    @Override
-    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        /** Cross Policy Header */
-        resp.addHeader("Access-Control-Allow-Origin", "*");
-        resp.addHeader("Access-Control-Allow-Methods","DELETE,PUT");
-        resp.addHeader("Access-Control-Allow-Headers","Content-Type");
-
-
-
     }
 }
