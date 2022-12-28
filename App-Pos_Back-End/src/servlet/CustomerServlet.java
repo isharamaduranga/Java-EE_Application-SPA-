@@ -7,8 +7,6 @@
  */
 
 package servlet;
-
-import db.DBConnection;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
@@ -67,7 +65,6 @@ public class CustomerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
 
         String id = req.getParameter("id");
         String name = req.getParameter("name");
@@ -139,7 +136,6 @@ public class CustomerServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject customer = reader.readObject();
 
@@ -148,9 +144,10 @@ public class CustomerServlet extends HttpServlet {
         String address = customer.getString("address");
         String salary = customer.getString("salary");
 
-        try {
-            PreparedStatement pst1 =
-                    DBConnection.getDbConnection().getConnection().prepareStatement("update customer  set name=?,address=?, salary=? where id=?");
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+
+            PreparedStatement pst1 = connection.prepareStatement("update customer  set name=?,address=?, salary=? where id=?");
 
             pst1.setObject(4, id);
             pst1.setObject(1, name);
@@ -170,12 +167,6 @@ public class CustomerServlet extends HttpServlet {
                 resp.setStatus(400);
             }
             resp.getWriter().print(jsonObj.build());
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
 
         } catch (SQLException e) {
             JsonObjectBuilder jsonObj = Json.createObjectBuilder();
