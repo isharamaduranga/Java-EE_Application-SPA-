@@ -51,7 +51,7 @@ public class CustomerServlet extends HttpServlet {
 
                 array.add(object.build());
             }
-
+            /** Closed using that connection*/
             connection.close();
 
             JsonObjectBuilder jsonRespObj = Json.createObjectBuilder();
