@@ -26,6 +26,8 @@ public class MyListener implements ServletContextListener {
         bds.setPassword("1234");
         bds.setMaxTotal(2);// How many Total connections you need inside the pool
         bds.setInitialSize(2);// How many connections  should  initialize from  the total connections
+
+        /** set the pool servlet Container use in servletContext setAttribute("name","value") */
         ServletContext servletContext = servletContextEvent.getServletContext();
         servletContext.setAttribute("dbcp",bds);
     }
