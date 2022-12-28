@@ -74,9 +74,9 @@ public class CustomerServlet extends HttpServlet {
         String address = req.getParameter("address");
         String salary = req.getParameter("salary");
 
-        try {
-            PreparedStatement pst =
-                    DBConnection.getDbConnection().getConnection().prepareStatement("insert into customer values(?,?,?,?)");
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+            PreparedStatement pst = connection.prepareStatement("insert into customer values(?,?,?,?)");
 
             pst.setObject(1, id);
             pst.setObject(2, name);
@@ -92,13 +92,6 @@ public class CustomerServlet extends HttpServlet {
                 jsonObj.add("message", "Successfully Added Customer Record...");
                 resp.getWriter().print(jsonObj.build());
             }
-
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
 
         } catch (SQLException e) {
 
