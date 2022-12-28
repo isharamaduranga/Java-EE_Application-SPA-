@@ -7,8 +7,7 @@
  */
 
 package servlet;
-
-import db.DBConnection;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 import javax.json.*;
 import javax.servlet.ServletException;
@@ -17,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,12 +26,13 @@ public class ItemServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try {
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
 
             //How to Manipulate JSON using Json Processing
             JsonArrayBuilder array = Json.createArrayBuilder();
 
-            PreparedStatement pstm = DBConnection.getDbConnection().getConnection().prepareStatement("select * from item");
+            PreparedStatement pstm = connection.prepareStatement("select * from item");
             ResultSet rst = pstm.executeQuery();
             while (rst.next()) {
                 JsonObjectBuilder object = Json.createObjectBuilder();
@@ -55,14 +56,7 @@ public class ItemServlet extends HttpServlet {
             jsonObj.add("message", e.getMessage());
             resp.getWriter().print(jsonObj.build());
             resp.setStatus(400);
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
         }
-
     }
 
 
@@ -74,9 +68,10 @@ public class ItemServlet extends HttpServlet {
         String qtyOnHand = req.getParameter("qtyOnHand");
         String unitPrice = req.getParameter("unitPrice");
 
-        try {
-            PreparedStatement pst =
-                    DBConnection.getDbConnection().getConnection().prepareStatement("insert into item values(?,?,?,?)");
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+
+            PreparedStatement pst = connection.prepareStatement("insert into item values(?,?,?,?)");
             pst.setObject(1, code);
             pst.setObject(2, description);
             pst.setObject(3, qtyOnHand);
@@ -97,13 +92,6 @@ public class ItemServlet extends HttpServlet {
             jsonObj.add("message", e.getMessage());
             resp.getWriter().print(jsonObj.build());
             resp.setStatus(400);
-
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
         }
     }
 
@@ -111,9 +99,10 @@ public class ItemServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String code = req.getParameter("code");
-        try {
-            PreparedStatement pst =
-                    DBConnection.getDbConnection().getConnection().prepareStatement("delete from item where code=?");
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+
+            PreparedStatement pst =connection.prepareStatement("delete from item where code=?");
             pst.setObject(1, code);
             boolean isDeleted = pst.executeUpdate() > 0;
 
@@ -135,12 +124,6 @@ public class ItemServlet extends HttpServlet {
             resp.getWriter().print(jsonObj.build());
             resp.setStatus(400);
 
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
         }
     }
 
@@ -155,9 +138,10 @@ public class ItemServlet extends HttpServlet {
         String qtyOnHand = item.getString("qtyOnHand");
         String unitPrice = item.getString("unitPrice");
 
-        try {
-            PreparedStatement pstm =
-                    DBConnection.getDbConnection().getConnection().prepareStatement("update item  set description=?,qtyOnHand=?,unitPrice=? where code=?");
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+
+            PreparedStatement pstm = connection.prepareStatement("update item  set description=?,qtyOnHand=?,unitPrice=? where code=?");
             pstm.setObject(4, code);
             pstm.setObject(1, description);
             pstm.setObject(2, qtyOnHand);
@@ -181,12 +165,6 @@ public class ItemServlet extends HttpServlet {
             jsonObj.add("message", e.getMessage());
             resp.getWriter().print(jsonObj.build());
             resp.setStatus(400);
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
         }
     }
 }
