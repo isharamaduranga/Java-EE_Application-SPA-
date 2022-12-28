@@ -107,9 +107,11 @@ public class CustomerServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String id = req.getParameter("id");
-        try {
-            PreparedStatement pst2 =
-                    DBConnection.getDbConnection().getConnection().prepareStatement("delete from customer where id=?");
+
+        /** Get Connection using dbcp(BasicDataSource) pool getAttribute Method */
+        try(Connection connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection()){
+
+            PreparedStatement pst2 =connection.prepareStatement("delete from customer where id=?");
 
             pst2.setObject(1, id);
             boolean isDeleted = pst2.executeUpdate() > 0;
@@ -125,21 +127,13 @@ public class CustomerServlet extends HttpServlet {
             }
             resp.getWriter().print(jsonObj.build());
 
-        } catch (ClassNotFoundException e) {
-            JsonObjectBuilder jsonObj = Json.createObjectBuilder();
-            jsonObj.add("state", "error");
-            jsonObj.add("message", e.getMessage());
-            resp.getWriter().print(jsonObj.build());
-            resp.setStatus(500);
-
-        } catch (SQLException e) {
+        }catch (SQLException e) {
             JsonObjectBuilder jsonObj = Json.createObjectBuilder();
             jsonObj.add("state", "error");
             jsonObj.add("message", e.getMessage());
             resp.getWriter().print(jsonObj.build());
             resp.setStatus(400);
         }
-
     }
 
     @Override
