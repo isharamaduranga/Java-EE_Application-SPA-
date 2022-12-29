@@ -250,6 +250,7 @@
 
     loadAllCustomers();
     loadAllItems();
+    setDate();
 
     function loadAllCustomers() {
       $("#cmbCustomerIDS").empty();
@@ -280,6 +281,11 @@
                 alert(JSON.parse(error.responseText).message);
             }
         });
+    }
+
+    function setDate() {
+        let date = new Date().toJSON().split("T")[0];
+        $("#txtOrderDate").val(date);
     }
 
 
