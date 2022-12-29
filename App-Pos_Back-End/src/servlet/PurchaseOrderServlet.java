@@ -17,47 +17,44 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 @WebServlet(urlPatterns = "/purchase")
 public class PurchaseOrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Connection connection = null;
-        try {
-             connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();
-             connection.setAutoCommit(false);
+        Connection connection=null;
+        try{
+            connection = ((BasicDataSource) getServletContext().getAttribute("dbcp")).getConnection();
+            connection.setAutoCommit(false);
 
             JsonReader reader = Json.createReader(req.getReader());
-            JsonObject readObject = reader.readObject();
+            JsonObject requestjob = reader.readObject();
+            String oid = requestjob.getString("oid");
+            String date = requestjob.getString("date");
+            String cusID = requestjob.getString("cusID");
 
-            String oid = readObject.getString("oid");
-            String date = readObject.getString("date");
-            String cusID = readObject.getString("cusID");
-
-            PreparedStatement pstm = connection.prepareStatement("Insert into Orders values (?,?,?)");
-            pstm.setObject(1,oid);
-            pstm.setObject(1,date);
-            pstm.setObject(1,cusID);
-            if (!(pstm.executeUpdate() > 0)) {
+            PreparedStatement psmt = connection.prepareStatement("Insert into Orders values(?,?,?)");
+            psmt.setObject(1,oid);
+            psmt.setObject(2,date);
+            psmt.setObject(3,cusID);
+            if (!(psmt.executeUpdate() > 0)) {
                 connection.rollback();
-                throw new RuntimeException("Can't Save The Order cuz Something went wrong!!!");
-            }else {
-                JsonArray orderDetails = readObject.getJsonArray("orderDetails");
-                for (JsonValue oDetails : orderDetails) {
-                    String code = oDetails.asJsonObject().getString("code");
-                    String qty = oDetails.asJsonObject().getString("qty");
-                    String price = oDetails.asJsonObject().getString("price");
+                throw new RuntimeException("Can't Save The Order");
+            }else{
+                JsonArray orderDetails = requestjob.getJsonArray("orderDetails");
+                for (JsonValue od : orderDetails) {
+                    String code = od.asJsonObject().getString("code");
+                    String qty = od.asJsonObject().getString("qty");
+                    String price = od.asJsonObject().getString("price");
 
-                    PreparedStatement pstm2 = connection.prepareStatement("Insert into OrderDetails values (?,?,?,?)");
+                    PreparedStatement pstm2 = connection.prepareStatement("Insert into OrderDetails values(?,?,?,?)");
                     pstm2.setObject(1,oid);
-                    pstm2.setObject(1,code);
-                    pstm2.setObject(1,qty);
-                    pstm2.setObject(1,price);
+                    pstm2.setObject(2,code);
+                    pstm2.setObject(3,qty);
+                    pstm2.setObject(4,price);
 
-                    if (!(pstm2.executeUpdate()>0)) {
+                    if (!(pstm2.executeUpdate() > 0)) {
                         connection.rollback();
                         throw new RuntimeException("There is a Problem With Order Details.");
                     }
@@ -74,14 +71,14 @@ public class PurchaseOrderServlet extends HttpServlet {
 
             }
 
-
-        }catch (SQLException |RuntimeException e){
+        } catch (SQLException|RuntimeException e) {
             JsonObjectBuilder jsonObject = Json.createObjectBuilder();
             try {
                 connection.rollback();
                 connection.setAutoCommit(true);
                 connection.close();
-            }catch (SQLException ex){
+
+            } catch (SQLException ex) {
                 jsonObject.add("state","error");
                 jsonObject.add("message",e.getMessage());
             }
@@ -90,5 +87,6 @@ public class PurchaseOrderServlet extends HttpServlet {
             resp.getWriter().print(jsonObject.build());
             resp.setStatus(500);
         }
+
     }
 }

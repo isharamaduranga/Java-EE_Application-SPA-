@@ -28,10 +28,18 @@ public class CORSFilter implements Filter {
 
         /** Cross Policy Header */
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
+
+        resp.setContentType("application/json");//MIME Type
+
+        //For Delete record
         resp.addHeader("Access-Control-Allow-Origin", "*");
-        resp.addHeader("Access-Control-Allow-Methods","DELETE,PUT");
-        resp.addHeader("Access-Control-Allow-Headers","Content-Type");
-        resp.setContentType("application/json"); //MIME TYPE*/
+
+        //For Update(PUT) record
+        resp.addHeader("Access-Control-Allow-Headers", "Content-Type");
+
+        //For Delete & Update(PUT) records
+        resp.addHeader("Access-Control-Allow-Methods", "DELETE,PUT");
+
     }
 
     @Override

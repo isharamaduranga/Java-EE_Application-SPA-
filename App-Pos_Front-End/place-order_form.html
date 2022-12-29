@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Bootstrap_Pos-System</title>
@@ -80,31 +80,36 @@
                                 <div class="col">
                                     Order Date:
                                     <form>
-                                        <input class="form-control" id="txtOrderDate" type="date">
+                                        <input class="form-control" id="txtDate" type="date">
                                     </form>
                                 </div>
 
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    Customer ID:
-                                    <select class="form-select" id="cmbCustomerIDS">
-
-                                    </select>
+                                    Customer:
+                                    <select class="form-control" id="selectCusID"></select>
                                 </div>
+                                <div class="col">
+                                    Customer ID:
+                                    <form>
+                                        <input class="form-control" id="orderCustomerID">
+                                    </form>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
                                 <div class="col">
                                     Salary:
                                     <form>
-                                        <input class="form-control" id="txtCusSalaryForOrder" type="text">
+                                        <input class="form-control" id="orderCustomerSalary" type="text">
                                     </form>
                                 </div>
-
-                            </div>
-                            <div class="row">
                                 <div class="col">
                                     Name:
                                     <form>
-                                        <input class="form-control " id="txtCusNameForOrder" type="text">
+                                        <input class="form-control " id="orderCustomerName" type="text">
                                     </form>
                                 </div>
 
@@ -113,7 +118,7 @@
                                 <div class="col">
                                     Address:
                                     <form>
-                                        <input class="form-control " id="txtAddressForOrder" type="text">
+                                        <input class="form-control " id="orderCustomerAddress" type="text">
                                     </form>
                                 </div>
                             </div>
@@ -124,55 +129,58 @@
 
                 <div class="col ms-2 " style="background-color: rgba(152,227,152,0.34); border-radius: 30px;">
                     <section class="container">
-                        <div class="row">
-                            <div class="bg-success text-white text-center mb-3 p-2"
-                                 style="border-radius: 25px;"><h5>Item Select</h5></div>
+                        <form>
+                            <div class="row">
+                                <div class="bg-success text-white text-center mb-3 p-2"
+                                     style="border-radius: 25px;"><h5>Item Select</h5></div>
 
-                            <div class="col">
-                                Item:
-                                <select class="form-select" id="cmbItemIds">
-                                </select>
+                                <div class="col">
+                                    Item:
+                                    <select class="form-control" id="selectItemCode"></select>
+                                </div>
+                                <div class="col">
+                                    Item Code:
+                                    <form>
+                                        <input class="form-control " id="txtItemCode" type="text">
+                                    </form>
+                                </div>
                             </div>
-                            <div class="col">
-                                Item Code:
-                                <form>
-                                    <input class="form-control " id="txtItemIDForOrder" type="text">
-                                </form>
+                            <div class="row">
+                                <div class="col">
+                                    Item Name:
+                                    <form>
+                                        <input class="form-control " id="txtItemDescription" type="text">
+                                    </form>
+                                </div>
+                                <div class="col">
+                                    Item Price:
+                                    <form>
+                                        <input class="form-control " id="txtItemPrice" type="text">
+                                    </form>
+                                </div>
+                                <div class="col">
+                                    QtyOnH:
+                                    <form>
+                                        <input class="form-control " id="txtQTYOnHand" type="text">
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                Item Name:
-                                <form>
-                                    <input class="form-control " id="txtItemNameForOrder" type="text">
-                                </form>
+                            <div class="row">
+                                <div class="col">
+                                    Order QTY:
+                                    <form>
+                                        <input class="form-control " id="txtQty" type="number">
+                                    </form>
+                                </div>
                             </div>
-                            <div class="col">
-                                Item Price:
-                                <form>
-                                    <input class="form-control " id="txtItemPriceForOrder" type="text">
-                                </form>
+                            <div class="row">
+                                <div class="col button">
+                                    <button class="btn btn-primary mt-5 text-center" id="btnAddToTable" type="button">
+                                        Add To Cart
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col">
-                                QtyOnH:
-                                <form>
-                                    <input class="form-control " id="txtQTYONHand" type="text">
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                Order QTY:
-                                <form>
-                                    <input class="form-control " id="txtOrderQty" type="text">
-                                </form>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col button">
-                                <button class="btn btn-primary mt-5 text-center" id="btnAddToCart">Add To Cart</button>
-                            </div>
-                        </div>
+                        </form>
                     </section>
 
                 </div>
@@ -188,13 +196,13 @@
                             <div class="col">
                                 Cash:
                                 <form>
-                                    <input class="form-control " id="txtCash" type="text">
+                                    <input class="form-control " id="txtCash" type="number">
                                 </form>
                             </div>
                             <div class="col">
                                 Discount:
                                 <form>
-                                    <input class="form-control " id="txtDiscount" type="text">
+                                    <input class="form-control " id="txtDiscount" type="number">
                                 </form>
                             </div>
                         </div>
@@ -210,33 +218,32 @@
 
                         <div class="row">
                             <div class="col button">
-                                <button class="btn btn-outline-success mt-4 mb-2" id="btnPurchase" type="button">
+                                <button class="btn btn-outline-success mt-4 mb-2" id="btnSubmitOrder" type="button">
                                     Purchase-Order
                                 </button>
                             </div>
+
                         </div>
                     </section>
                 </div>
 
                 <div class="mt-2" style="height: 265px; overflow-x: scroll">
-                    <table class="table table-bordered table-hover table-striped">
-                        <thead class="bg-secondary text-white" id="tableHead_order">
-                        <tr class="head">
-                            <th scope="col">Order ID</th>
-                            <th scope="col">Item Code</th>
-                            <th scope="col">Item Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
+
+                    <table class="table table-bordered text-white">
+                        <thead class="bg-primary">
+                        <tr>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
                         </tr>
                         </thead>
-                        <tbody id="tblCart" class="table-light">
-
+                        <tbody class="bg-light text-dark" id="orderTable">
 
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
@@ -244,60 +251,58 @@
 
 
 <!--Import js for bootstrap-->
-<script src="assests/js/bootstrap.min.js"></script>
 <script src="assests/jquery/jquery-3.6.1.min.js"></script>
+<script src="assests/js/bootstrap.min.js"></script>
 <script>
-    let baseURL = "http://localhost:8080/posbackend/";
 
-    loadAllCustomers();
+    let baseUrl = "http://localhost:8080/posbackend/";
+
+    //load all items from the database
     loadAllItems();
-    setDate();
+    loadAllCustomers();
+    setDates();
+    searchCustomer();
 
-    /** Function of load all Customer Ids to combobox */
-    function loadAllCustomers() {
-        $("#cmbCustomerIDS").empty();
-
-        $.ajax({
-            url: baseURL + "customer",
-            dataType: "json",
-            success: function (resp) {
-                for (let cus of resp.data) {
-                    $("#cmbCustomerIDS").append(`<option value="${cus.id}">${cus.id}</option>`);
-                }
-            }
-        });
-    }
-
-    /** Function of load all Items codes to combobox */
     function loadAllItems() {
-        $("#cmbItemIds").empty();
-
+        $("#selectItemCode").empty();
         $.ajax({
-            url: baseURL + "item",
-            success: function (resp) {
-                for (let itm of resp.data) {
-                    let code = itm.code;
-                    $("#cmbItemIds").append(`<option value="${code}">${code}</option>`)
+            url: baseUrl + "item",
+            success: function (res) {
+                for (let c of res.data) {
+                    let code = c.code;
+                    $("#selectItemCode").append(`<option value="${code}">${code}</option>`);
                 }
             },
             error: function (error) {
-                alert(JSON.parse(error.responseText).message);
+                let message = JSON.parse(error.responseText).message;
+                alert(message);
             }
         });
     }
 
-    /** Function of set Order date from field */
-    function setDate() {
-        let date = new Date().toJSON().split("T")[0];
-        $("#txtOrderDate").val(date);
+    function loadAllCustomers() {
+        $("#selectCusID").empty();
+        $.ajax({
+            url: baseUrl + "customer",
+            dataType: "json",
+            success: function (resp) {
+                console.log(resp);
+                for (let cus of resp.data) {
+                    $("#selectCusID").append(`<option value="${cus.id}">${cus.id}</option>`);
+                }
+            }
+        });
     }
 
-    /** Function of Search Customer from database and return a customer object using response */
+    function setDates() {
+        let date = new Date().toJSON().split("T")[0];
+        $("#txtDate").val(date);
+    }
+
     function searchCustomer(cusID) {
         let response = "";
-
         $.ajax({
-            url: baseURL + "customer",
+            url: baseUrl + "customer",
             dataType: "json",
             async: false,
             success: function (resp) {
@@ -306,106 +311,104 @@
                 });
             }
         });
-        console.log(response);
         return response;
     }
 
-    /** Function of Search Item from database and return a item object using response */
-    function searchItem(itmCode) {
+    function searchItem(code) {
         let response = "";
         $.ajax({
-            url: baseURL + "item",
+            url: baseUrl + "item",
             dataType: "json",
             async: false,
             success: function (resp) {
                 response = resp.data.filter((i) => {
-                    return i.code == itmCode;
+                    return i.code == code;
                 });
             }
-
         });
         return response;
+        console.log(response);
     }
 
-    $("#cmbCustomerIDS").change(function () {
-        let cusID = $("#cmbCustomerIDS").val();
+
+    $("#selectCusID").change(function () {
+        let cusID = $("#selectCusID").val();
+        $("#orderCustomerID").val(cusID);
         let res = searchCustomer(cusID);
-
         if (res.length > 0) {
-            $("#txtCusSalaryForOrder").val(res[0].salary);
-            $("#txtCusNameForOrder").val(res[0].name);
-            $("#txtAddressForOrder").val(res[0].address);
+            $("#orderCustomerName").val(res[0].name);
+            $("#orderCustomerSalary").val(res[0].salary);
+            $("#orderCustomerAddress").val(res[0].address);
+        }
+
+    });
+
+
+    $("#selectItemCode").change(function () {
+        let code = $("#selectItemCode").val();
+        $("#txtItemCode").val(code);
+        let res = searchItem(code);
+        if (res.length > 0) {
+            $("#txtItemDescription").val(res[0].description);
+            $("#txtItemPrice").val(res[0].unitPrice);
+            $("#txtQTYOnHand").val(res[0].qtyOnHand);
         }
     });
 
-    $("#cmbItemIds").change(function () {
-        let itmCode = $("#cmbItemIds").val();
-        $("#txtItemIDForOrder").val(itmCode);
-        let res = searchItem(itmCode);
-        if (res.length > 0) {
-            $("#txtItemNameForOrder").val(res[0].description);
-            $("#txtQTYONHand").val(res[0].qtyOnHand);
-            $("#txtItemPriceForOrder").val(res[0].unitPrice);
-        }
+
+    $("#btnAddToTable").click(function () {
+        let code = $("#selectItemCode").val();
+        let description = $("#txtItemDescription").val();
+        let itemPrice = $("#txtItemPrice").val();
+        let buyQty = $("#txtQty").val();
+        let total = parseFloat(itemPrice) * parseFloat(buyQty);
+        $("#orderTable").append(`<tr><td>${code}</td><td>${description}</td><td>${itemPrice}</td><td>${buyQty}</td><td>${total}</td></tr>`);
     });
 
-    $("#btnAddToCart").click(function () {
-        let oid = $("#txtOrderId").val();
-        let iCode = $("#txtItemIDForOrder").val();
-        let iName = $("#txtItemNameForOrder").val();
-        let price = $("#txtItemPriceForOrder").val();
-        let qty = $("#txtOrderQty").val();
-        let tot = price * qty;
-        let total = tot;
 
-        $("#tblCart").append(`<tr> <td>${oid}</td> <td>${iCode}</td> <td>${iName}</td> <td>${price}</td> <td>${qty}</td> <td>${total}</td> </tr>`);
-
-    });
-
-    $("#btnPurchase").click(function () {
-
+    $("#btnSubmitOrder").click(function () {
         let orderID = $("#txtOrderId").val();
-        let customerId = $("#cmbCustomerIDS").val();
-        let orderDate = $("#txtOrderDate").val();
-        let orderDetails = getItemDetails();
+        let customerID = $("#orderCustomerID").val();
+        let orderDate = $("#txtDate").val();
+        let orderD = getItemDetails();
 
-        let orderDetailsObj = {
-            oid: orderID,
-            date: orderDate,
-            cusID: customerId,
-            orderDetails: orderDetails
+        let ob={
+            oid:orderID,
+            date:orderDate,
+            cusID:customerID,
+            orderDetails:orderD
         }
 
+        //send request
         $.ajax({
-            url: baseURL + "purchase",
-            method: "post",
+            url: baseUrl + "purchase",
+            method:"post",
             dataType: "json",
-            date: JSON.stringify(orderDetailsObj),
-            contentType: "application/json",
+            data:JSON.stringify(ob),
+            contentType:"application/json",
             success: function (resp) {
-                alert(resp.message)
+                alert(resp.message);
             },
-            error: function (error) {
+            error:function (error){
                 alert(JSON.parse(error.responseText).message);
             }
         });
+
+
     });
 
     function getItemDetails() {
-        let rows = $("#tblCart").children.length;
+        let rows = $("#orderTable").children().length;
         var array = [];
-
         for (let i = 0; i < rows; i++) {
-            let itmCode = $("#tblCart").children().eq(i).children(":eq(1)").text();
-            let itmQty = $("#tblCart").children().eq(i).children(":eq(4)").text();
-            let itmPrice = $("#tblCart").children().eq(i).children(":eq(3)").text();
-
-            array.push({code: itmCode, qty: itmQty, price: itmPrice});
+            let itCode = $("#orderTable").children().eq(i).children(":eq(0)").text();
+            let itQty = $("#orderTable").children().eq(i).children(":eq(2)").text();
+            let itPrice = $("#orderTable").children().eq(i).children(":eq(3)").text();
+            array.push({code: itCode, qty: itQty, price: itPrice});
         }
-
         return array;
-
     }
+
 </script>
 </body>
 </html>

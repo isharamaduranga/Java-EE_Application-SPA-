@@ -176,4 +176,8 @@ public class CustomerServlet extends HttpServlet {
             resp.setStatus(404);
         }
     }
+    @Override
+    public void destroy() {
+        System.out.println("customer servlet destroy method  invoked");
+    }
 }
