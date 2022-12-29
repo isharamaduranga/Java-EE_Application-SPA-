@@ -252,6 +252,7 @@
     loadAllItems();
     setDate();
 
+    /** Function of load all Customer Ids to combobox */
     function loadAllCustomers() {
       $("#cmbCustomerIDS").empty();
 
@@ -266,6 +267,7 @@
       });
     }
 
+    /** Function of load all Items codes to combobox */
     function loadAllItems() {
         $("#cmbItemIds").empty();
 
@@ -283,12 +285,13 @@
         });
     }
 
+    /** Function of set Order date from field */
     function setDate() {
         let date = new Date().toJSON().split("T")[0];
         $("#txtOrderDate").val(date);
     }
 
-
+    /** Function of Search Customer from database and return a customer object using response */
     function searchCustomer(cusID) {
         let response = "";
 
@@ -298,11 +301,28 @@
             async:false,
             success: function (resp) {
                 response =resp.data.filter((c) => {
-                    return c.id == cusID
+                    return c.id == cusID;
                 });
             }
         });
         console.log(response);
+        return response;
+    }
+
+    /** Function of Search Item from database and return a item object using response */
+    function searchItem(itmCode) {
+        let response = "";
+        $.ajax({
+            url:baseURL+"item",
+            dataType:"json",
+            async: false,
+            success:function (resp) {
+                response= resp.data.filter((i) => {
+                    return i.code == itmCode;
+                });
+            }
+
+        });
         return response;
     }
 
@@ -317,7 +337,16 @@
         }
     });
 
-
+    $("#cmbItemIds").change(function () {
+        let itmCode = $("#cmbItemIds").val();
+        $("#txtItemIDForOrder").val(itmCode);
+        let res = searchItem(itmCode);
+        if (res.length > 0) {
+            $("#txtItemNameForOrder").val(res[0].description);
+            $("#txtQTYONHand").val(res[0].qtyOnHand);
+            $("#txtItemPriceForOrder").val(res[0].unitPrice);
+        }
+    });
 
 
 </script>
