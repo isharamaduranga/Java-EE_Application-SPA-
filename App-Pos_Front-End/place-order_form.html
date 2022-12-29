@@ -402,8 +402,8 @@
         var array = [];
         for (let i = 0; i < rows; i++) {
             let itCode = $("#orderTable").children().eq(i).children(":eq(0)").text();
-            let itQty = $("#orderTable").children().eq(i).children(":eq(2)").text();
-            let itPrice = $("#orderTable").children().eq(i).children(":eq(3)").text();
+            let itQty = $("#orderTable").children().eq(i).children(":eq(3)").text();
+            let itPrice = $("#orderTable").children().eq(i).children(":eq(2)").text();
             array.push({code: itCode, qty: itQty, price: itPrice});
         }
         return array;

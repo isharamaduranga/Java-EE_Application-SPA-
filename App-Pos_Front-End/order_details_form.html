@@ -66,9 +66,8 @@
                 <thead class="text-bg-secondary text-white">
                 <tr class="head">
                     <th>Order ID</th>
-                    <th>Customer Id</th>
                     <th>Date</th>
-                    <th>Total</th>
+                    <th>Customer Id</th>
                 </tr>
                 </thead>
                 <tbody id="orderTables" class="table-light">
@@ -91,17 +90,13 @@
                 <thead class="bg-secondary text-white">
                 <tr class="head">
                     <th scope="col">Order ID</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Customer Id</th>
-                    <th scope="col">Customer Name</th>
                     <th scope="col">Item Code</th>
-                    <th scope="col">Item Name</th>
-                    <th scope="col">Quantity</th>
-                    <th scope="col">Discount</th>
-                    <th scope="col">Total</th>
+                    <th scope="col">Order Quantity</th>
+                    <th scope="col">Price</th>
+
                 </tr>
                 </thead>
-                <tbody id="orderDetailTable " class="table-light">
+                <tbody id="orderDetailTable" class="table-light">
 
 
 
@@ -111,15 +106,32 @@
     </section>
 </section>
 
-
-
-
-
 <!--Import js for bootstrap-->
 <script src="assests/js/bootstrap.min.js"></script>
+<script src="assests/jquery/jquery-3.6.1.min.js"></script>
 
 <script>
+    let baseUrl = "http://localhost:8080/posbackend/";
+    loadAllOrder();
 
+
+    function loadAllOrder() {
+        $("#orderTables").empty();
+        $("#orderDetailTable").empty();
+        $.ajax({
+            url:baseUrl+"OrderDetails",
+            dataType:"json",
+            success:function (resp) {
+                for (let oder of resp.data) {
+                    $("#orderTables").append("<tr> <td>"+oder.oid+"</td> <td>"+oder.date+"</td> <td>"+oder.customerID+"</td> </tr>");
+
+                }
+                for (let oDetails of resp.dataTwo) {
+                    $("#orderDetailTable").append("<tr><td>"+oDetails.orderID+"</td> <td>"+oDetails.itemCode+"</td> <td>"+oDetails.orderQty+"</td> <td>"+oDetails.price+"</td> </tr>");
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>
