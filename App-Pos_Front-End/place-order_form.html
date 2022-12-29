@@ -289,6 +289,37 @@
     }
 
 
+    function searchCustomer(cusID) {
+        let response = "";
+
+        $.ajax({
+            url: baseURL+"customer",
+            dataType: "json",
+            async:false,
+            success: function (resp) {
+                response =resp.data.filter((c) => {
+                    return c.id == cusID
+                });
+            }
+        });
+        console.log(response);
+        return response;
+    }
+
+    $("#cmbCustomerIDS").change(function () {
+        let cusID = $("#cmbCustomerIDS").val();
+        let res= searchCustomer(cusID);
+
+        if (res.length > 0) {
+            $("#txtCusSalaryForOrder").val(res[0].salary);
+            $("#txtCusNameForOrder").val(res[0].name);
+            $("#txtAddressForOrder").val(res[0].address);
+        }
+    });
+
+
+
+
 </script>
 </body>
 </html>
