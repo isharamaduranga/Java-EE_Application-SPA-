@@ -249,6 +249,7 @@
     let baseURL="http://localhost:8080/posbackend/";
 
     loadAllCustomers();
+    loadAllItems();
 
     function loadAllCustomers() {
       $("#cmbCustomerIDS").empty();
@@ -264,6 +265,22 @@
       });
     }
 
+    function loadAllItems() {
+        $("#cmbItemIds").empty();
+
+        $.ajax({
+            url: baseURL+"item",
+            success:function (resp) {
+                for (let itm of resp.data) {
+                    let code=itm.code;
+                    $("#cmbItemIds").append(`<option value="${code}">${code}</option>`)
+                }
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
+            }
+        });
+    }
 
 
 </script>
