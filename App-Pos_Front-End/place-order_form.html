@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Bootstrap_Pos-System</title>
@@ -66,6 +66,7 @@
             <div class="row ">
                 <div class="col ms-2 " style="background-color: rgba(239,228,168,0.44); border-radius: 30px;">
                     <section class="container">
+                        <form>
                         <div class="row">
                             <div class="bg-warning text-white text-center mb-3 p-2"
                                  style="border-radius: 25px;"><h5>Invoice Details</h5></div>
@@ -116,7 +117,7 @@
                                 </form>
                             </div>
                         </div>
-
+                        </form>
                     </section>
 
                 </div>
@@ -229,30 +230,8 @@
                         </thead>
                         <tbody id="tblCart" class="table-light">
 
-                        <tr>
-                            <th scope="row">OID-001</th>
-                            <td>I00-001</td>
-                            <td>Noodles</td>
-                            <td>650.00</td>
-                            <td>5</td>
-                            <td>3250.00</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">OID-002</th>
-                            <td>I00-002</td>
-                            <td>White-Rice</td>
-                            <td>1800.00</td>
-                            <td>2</td>
-                            <td>3600.00</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">OID-003</th>
-                            <td>I00-003</td>
-                            <td>Fresh-Milk</td>
-                            <td>825.00</td>
-                            <td>2</td>
-                            <td>1650.00</td>
-                        </tr>
+
+
                         </tbody>
                     </table>
                 </div>
@@ -265,8 +244,25 @@
 
 <!--Import js for bootstrap-->
 <script src="assests/js/bootstrap.min.js"></script>
+<script src="assests/jquery/jquery-3.6.1.min.js"></script>
 <script>
     let baseURL="http://localhost:8080/posbackend/";
+
+    loadAllCustomers();
+
+    function loadAllCustomers() {
+      $("#cmbCustomerIDS").empty();
+
+      $.ajax({
+          url:baseURL+"customer",
+          dataType:"json",
+          success:function (resp) {
+              for (let cus of resp.data) {
+                  $("#cmbCustomerIDS").append(`<option value="${cus.id}">${cus.id}</option>`);
+              }
+          }
+      });
+    }
 
 
 
