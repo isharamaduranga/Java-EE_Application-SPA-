@@ -349,17 +349,49 @@
     });
 
     $("#btnAddToCart").click(function () {
-        let oid   = $("#txtOrderId").val()
-        let iCode = $("#txtItemIDForOrder").val()
-        let iName = $("#txtItemNameForOrder").val()
-        let price = $("#txtItemPriceForOrder").val()
-        let qty   = $("#txtOrderQty").val()
+        let oid   = $("#txtOrderId").val();
+        let iCode = $("#txtItemIDForOrder").val();
+        let iName = $("#txtItemNameForOrder").val();
+        let price = $("#txtItemPriceForOrder").val();
+        let qty   = $("#txtOrderQty").val();
         let tot= price*qty;
         let total = tot;
 
         $("#tblCart").append(`<tr> <td>${oid}</td> <td>${iCode}</td> <td>${iName}</td> <td>${price}</td> <td>${qty}</td> <td>${total}</td> </tr>`);
 
     });
+
+    $("#btnPurchase").click(function () {
+
+        let orderID = $("#txtOrderId").val();
+        let customerId = $("#cmbCustomerIDS").val();
+        let orderDate = $("#txtOrderDate").val();
+        let orderDetails = getItemDetails();
+
+        let ob={
+            oid:orderID,
+            date:orderDate,
+            cusID:customerId,
+            orderDetails:orderDetails
+        }
+
+    });
+
+    function getItemDetails() {
+        let rows= $("#tblCart").children.length;
+        var array=[];
+
+        for (let i = 0; i < rows; i++) {
+            let itmCode = $("#tblCart").children().eq(i).children(":eq(1)").text();
+            let itmQty = $("#tblCart").children().eq(i).children(":eq(4)").text();
+            let itmPrice = $("#tblCart").children().eq(i).children(":eq(3)").text();
+
+            array.push({code: itmCode,qty:itmQty,price:itmPrice});
+        }
+
+        return array;
+
+    }
 
 
 
