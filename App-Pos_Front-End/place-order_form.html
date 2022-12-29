@@ -368,7 +368,7 @@
         let orderDate = $("#txtOrderDate").val();
         let orderDetails = getItemDetails();
 
-        let ob={
+        let orderDetailsObj={
             oid:orderID,
             date:orderDate,
             cusID:customerId,
@@ -377,8 +377,17 @@
 
         $.ajax({
             url:baseURL+"purchase",
-        })
-
+            method:"post",
+            dataType:"json",
+            date: JSON.stringify(orderDetailsObj),
+            contentType:"application/json",
+            success:function (resp) {
+                alert(resp.message)
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
+            }
+        });
     });
 
     function getItemDetails() {
