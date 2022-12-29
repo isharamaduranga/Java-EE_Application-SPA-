@@ -348,6 +348,20 @@
         }
     });
 
+    $("#btnAddToCart").click(function () {
+        let oid   = $("#txtOrderId").val()
+        let iCode = $("#txtItemIDForOrder").val()
+        let iName = $("#txtItemNameForOrder").val()
+        let price = $("#txtItemPriceForOrder").val()
+        let qty   = $("#txtOrderQty").val()
+        let tot= price*qty;
+        let total = tot;
+
+        $("#tblCart").append(`<tr> <td>${oid}</td> <td>${iCode}</td> <td>${iName}</td> <td>${price}</td> <td>${qty}</td> <td>${total}</td> </tr>`);
+
+    });
+
+
 
 </script>
 </body>
