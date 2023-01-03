@@ -69,7 +69,8 @@
                                 <div class="col">
                                     Order ID:
                                     <form>
-                                        <input class="form-control text-primary text-lg-center"  style="font-weight: bold " id="txtOrderId" type="button">
+                                        <input class="form-control text-primary text-lg-center"
+                                               style="font-weight: bold " id="txtOrderId" type="button">
                                         <span class="control-error_item" id="lblOrderID"></span>
                                     </form>
                                 </div>
@@ -262,11 +263,13 @@
     searchCustomer();
     generateOrderID();
     $("#btnSubmitOrder").attr('disabled', true);
-    $()
 
-    /** Function of*/
+    /** Define the Cart Array */
+    var cart = [];
+
+    /** Function of Load All Items with combobox */
     function loadAllItems() {
-        /* $("#selectItemCode").empty();*/
+
         $("#selectItemCode").append(`<option>Select Item</option>`);
         $.ajax({
             url: baseUrl + "item",
@@ -283,6 +286,7 @@
         });
     }
 
+    /** Function of Load All Items with combobox */
     function loadAllCustomers() {
         $("#selectCusID").append(`<option>Select Customer</option>`);
         $.ajax({
@@ -297,11 +301,13 @@
         });
     }
 
+    /** Function of Load Current date */
     function setDates() {
         let date = new Date().toJSON().split("T")[0];
         $("#txtDate").val(date);
     }
 
+    /** Function of search  customer by Customer Id */
     function searchCustomer(cusID) {
         let response = "";
         $.ajax({
@@ -317,6 +323,7 @@
         return response;
     }
 
+    /** Function of search Items by Item Code */
     function searchItem(code) {
         let response = "";
         $.ajax({
@@ -333,7 +340,7 @@
         console.log(response);
     }
 
-
+    /** Function of Set Customer Data to fields after the Search */
     $("#selectCusID").change(function () {
         let cusID = $("#selectCusID").val();
         $("#orderCustomerID").val(cusID);
@@ -346,7 +353,7 @@
         textFieldColorChange_customer();
     });
 
-
+    /** Function of Set Items Data to fields after the Search */
     $("#selectItemCode").change(function () {
         let code = $("#selectItemCode").val();
         $("#txtItemCode").val(code);
@@ -359,7 +366,7 @@
         textFieldColorChange_Item();
     });
 
-
+    /** Function of Add To Table(Cart) Input data */
     $("#btnAddToTable").click(function () {
         let qtyOnHand = parseInt($("#txtQTYOnHand").val());
         let orderQty = parseInt($("#txtQty").val());
@@ -374,18 +381,13 @@
                 addToCart();
                 loadAllCart();
                 calculateTotal();
-
-
-               // $("#txtItemCode,#txtItemDescription,#txtQTYOnHand,#txtQty,#txtItemPrice").val("");
             }
         } else {
             alert("please Enter Order Quantity..");
         }
-
     });
-    var cart = [];
 
-
+    /** function of add To Cart */
     function addToCart() {
 
         let code = $("#selectItemCode").val();
@@ -404,24 +406,24 @@
                 return;
             }
         }
-
         let cartOrder = new cartModel(code, description, itemPrice, buyQty, total);
         cart.push(cartOrder);
 
         $("#txtBalance,#txtCash,#txtDiscount").val("");
     }
 
-
+    /** function of load all data (included to search same oid and updated) */
     function loadAllCart() {
         $("#orderTable").empty();
         for (let cartItm of cart) {
 
-            var cartRow  =`<tr><td>${cartItm.getCode()}</td><td>${cartItm.getDescription()}</td><td>${cartItm.getItemPrice()}</td><td>${cartItm.getBuyQty()}</td><td>${cartItm.getTotal()}</td></tr>`
+            var cartRow = `<tr><td>${cartItm.getCode()}</td><td>${cartItm.getDescription()}</td><td>${cartItm.getItemPrice()}</td><td>${cartItm.getBuyQty()}</td><td>${cartItm.getTotal()}</td></tr>`
 
             $("#orderTable").append(cartRow);
         }
     }
 
+    /** function of find same order id and when add data & updated qty with already added oder..*/
     function updateQty() {
         let qtyOnHand = $('#txtQTYOnHand').val();
         let order_qty = $('#txtQty').val();
@@ -429,7 +431,7 @@
 
         $("#itemTable").empty();
         $.ajax({
-            url: baseUrl+"item",
+            url: baseUrl + "item",
             dataType: "json",
             success: function (resp) {
                 for (let itm of resp.data) {
@@ -443,35 +445,35 @@
         });
     }
 
+    /**  Function of send to request to updated new quantity and set updated quantity related input field  */
     function setItemQty(newQty) {
         let itemCode = $('#selectItemCode').val();
         let itemName = $('#txtItemDescription').val();
         $("#txtQTYOnHand").val(newQty);
         let itemQty = $("#txtQTYOnHand").val();
         let itemPrice = $('#txtItemPrice').val();
-
-        let item={
-            code:itemCode,
-            description:itemName,
-            qtyOnHand:itemQty,
-            unitPrice:itemPrice
+        //create js object for send to json object
+        let item = {
+            code: itemCode,
+            description: itemName,
+            qtyOnHand: itemQty,
+            unitPrice: itemPrice
         }
-
         $.ajax({
-            url: baseUrl+"item",
-            method:"put",
-            contentType:"application/json",
+            url: baseUrl + "item",
+            method: "put",
+            contentType: "application/json",
             data: JSON.stringify(item),
-            dataType:"json",
-            success:function (resp) {
+            dataType: "json",
+            success: function (resp) {
             },
-            error:function (error) {
+            error: function (error) {
                 alert(JSON.parse(error.responseText).message);
             }
         });
     }
-    const OrderIDRegEx = /^(OID-)[0-9]{1,4}$/;
 
+    /** function of txtCash button keyup event logic... */
     $('#txtCash').on('keyup', function (event) {
 
         if (event.key == "Enter") {
@@ -487,16 +489,17 @@
 
             $('#txtBalance').val(balance);
 
-            Span_BorderCssChange_Default( $('#txtCash'), "");
+            Span_BorderCssChange_Default($('#txtCash'), "");
 
             $("#btnSubmitOrder").attr('disabled', false);
         } else {
 
-            Span_BorderCssChange_Error($('#txtCash') ,"Insufficient Credit Balance" );
+            Span_BorderCssChange_Error($('#txtCash'), "Insufficient Credit Balance");
 
         }
     });
 
+    /** function of Calculate Total of cart items.. */
     function calculateTotal() {
         let tot = 0;
         $('#orderTable>tr').each(function () {
@@ -511,6 +514,7 @@
         tempTot = tot;
     }
 
+    /** function of Calculate Discount of cart items.. */
     $('#txtDiscount').on('keyup', function () {
         if ($("#txtDiscount").val() === "") {
             $('#subtotal>span').text('0.00');
@@ -526,20 +530,19 @@
         }
     });
 
-
-    $("#txtQty").on('keyup keydown',function () {
+    /** function of txtQty button keyup,keydown event logic... */
+    $("#txtQty").on('keyup keydown', function () {
         let qhd = $("#txtQTYOnHand").val();
-        let typeQty= $("#txtQty").val();
+        let typeQty = $("#txtQty").val();
         if (typeQty > qhd) {
-            Span_BorderCssChange_Error( $('#txtQty'), "");
-        }else{
-            Span_BorderCssChange_Default( $('#txtQty'), "");
+
+            Span_BorderCssChange_Error($('#txtQty'), "Please  Enter a Amount lower than: " + typeQty + "");
+        } else {
+            Span_BorderCssChange_Default($('#txtQty'), "");
         }
     })
 
-
-
-
+    /** function of Purchase Order logics. */
     $("#btnSubmitOrder").click(function () {
         let orderID = $("#txtOrderId").val();
         let customerID = $("#orderCustomerID").val();
@@ -563,11 +566,15 @@
             success: function (resp) {
 
                 alert(resp.message);
+                //call generate order id
                 generateOrderID();
+
+                //functionalities of clear cart details and clear cart array after the Purchase order
                 cart.splice(0, cart.length);
                 $('#orderTable').empty();
                 $("#btnSubmitOrder").attr('disabled', true);
                 $("#total>span,#subtot").text("00");
+                //load customer and items ids with combo box
                 loadAllCustomers();
                 loadAllItems();
 
@@ -580,6 +587,7 @@
 
     });
 
+    /** function of get Item Details... */
     function getItemDetails() {
         let rows = $("#orderTable").children().length;
         var array = [];
@@ -592,35 +600,30 @@
         return array;
     }
 
-
+    /** function of change Colors with customer fields . */
     function textFieldColorChange_customer() {
         let cusId = $('#selectCusID').val();
         if (cusId === 'Select Customer') {
 
             $("#orderCustomerID,#orderCustomerName,#orderCustomerSalary,#orderCustomerAddress")
                 .css("border", "2px solid #ced4da");
-
             //clear fields
             clearSetDetails($("#orderCustomerID"), $("#orderCustomerName"), $("#orderCustomerSalary"), $("#orderCustomerAddress"));
-
         } else {
             $("#orderCustomerID,#orderCustomerName,#orderCustomerSalary,#orderCustomerAddress")
                 .css("border", "2px solid limegreen");
         }
     }
 
+    /** function of change Colors with Item fields . */
     function textFieldColorChange_Item() {
         let itemCode = $('#selectItemCode').val();
 
         if (itemCode === "Select Item") {
-
             $("#txtItemCode,#txtItemDescription,#txtItemPrice,#txtQTYOnHand").css("border", "2px solid #ced4da");
-
             //clear fields
             clearSetDetails($("#txtItemCode"), $("#txtItemDescription"), $("#txtItemPrice"), $("#txtQTYOnHand"));
-
         } else {
-
             $("#txtItemCode,#txtItemDescription,#txtItemPrice,#txtQTYOnHand").css("border", "2px solid limegreen");
 
         }
@@ -638,22 +641,7 @@
         field.parent().children('span').text(massage);
     }
 
-    $('#txtOrderQty').on('keyup', function () {
-        orderQtyColourChange();
-    });
-
-    function orderQtyColourChange() {
-        let qHand = parseInt($("#txtQTYOnHand").val());
-        let orQty = parseInt($("#txtQty").val());
-        if (qHand < orQty) {
-
-            Span_BorderCssChange_Error($('#txtQty'), "Please  Enter a Amount lower than: " + orQty + "");
-
-        } else {
-            Span_BorderCssChange_Default($('#txtQty'), "")
-        }
-    }
-
+    /** function of clear Details passed that fields . */
     function clearSetDetails(param1, param2, param3, param4) {
         param1.val("");
         param2.val("");
@@ -661,7 +649,7 @@
         param4.val("");
     }
 
-
+    /** function of Auto generate Order id with related field. */
     function generateOrderID() {
         try {
             $.ajax({
