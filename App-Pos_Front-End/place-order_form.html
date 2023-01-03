@@ -197,14 +197,14 @@
                             <div class="col">
                                 Cash:
                                 <form>
-                                    <input class="form-control " id="txtCash" type="number">
+                                    <input class="form-control " id="txtCash" type="text">
                                     <span class="control-error_item" id="lblCheckCash"></span>
                                 </form>
                             </div>
                             <div class="col">
                                 Discount:
                                 <form>
-                                    <input class="form-control " id="txtDiscount" type="number">
+                                    <input class="form-control " id="txtDiscount" type="text">
                                 </form>
                             </div>
                         </div>
@@ -266,7 +266,7 @@
     setDates();
     searchCustomer();
     generateOrderID();
-
+    $("#btnSubmitOrder").attr('disabled', true);
 
     function loadAllItems() {
         /* $("#selectItemCode").empty();*/
@@ -375,6 +375,7 @@
                 updateQty();
                 addToCart();
                 loadAllCart();
+                calculateTotal();
 
 
                // $("#txtItemCode,#txtItemDescription,#txtQTYOnHand,#txtQty,#txtItemPrice").val("");
@@ -438,12 +439,6 @@
                     if ($("#selectItemCode").val() === itm.code) {
 
                         setItemQty(newQtyValue);
-
-                     /*var id = getItemQty();
-
-                        $('#txtQTYOnHand').val(id);*/
-
-
                     }
                 }
             }
@@ -471,31 +466,71 @@
             data: JSON.stringify(item),
             dataType:"json",
             success:function (resp) {
-                alert(resp.message);
-                loadAllItems()
             },
             error:function (error) {
                 alert(JSON.parse(error.responseText).message);
             }
         });
     }
+    const OrderIDRegEx = /^(OID-)[0-9]{1,4}$/;
 
-    function getItemQty() {
-        let val = $("#selectItemCode").val();
-        $.ajax({
-            url: baseUrl+"item",
-            dataType: "json",
-            success: function (resp) {
-                for (let itm of resp.data) {
+    $('#txtCash').on('keyup', function (event) {
 
-                    if (itm.code == val){
-                        return itm.qtyOnHand;
-                    }
-                }
+        if (event.key == "Enter") {
+            event.preventDefault();
+        }
 
+        let cash = parseFloat($('#txtCash').val());
+        let tot = $('#total>span').text();
+
+        if (cash > tot) {
+            let total = parseFloat($('#subtot').text());
+            let balance = cash - total;
+
+            $('#txtBalance').val(balance);
+
+            Span_BorderCssChange_Default( $('#txtCash'), "");
+
+            $("#btnSubmitOrder").attr('disabled', false);
+        } else {
+
+            Span_BorderCssChange_Error($('#txtCash') ,"Insufficient Credit Balance" );
+
+        }
+    });
+
+    function calculateTotal() {
+        let tot = 0;
+        $('#orderTable>tr').each(function () {
+            tot = tot + parseFloat($($(this).children().get(4)).text());
+            $('#total>span').text(tot).append('.00');
+
+            if ($("#txtDiscount").val() === "") {
+
+                $('#subtotal>span').text(tot);
             }
         });
+        tempTot = tot;
     }
+
+    $('#txtDiscount').on('keyup', function () {
+        if ($("#txtDiscount").val() === "") {
+            $('#subtotal>span').text('0.00');
+        } else {
+            let tot = parseFloat(tempTot);
+            let dis = tot / 100 * parseFloat($("#txtDiscount").val());
+
+            $('#subtotal>span').text(tot - dis);
+
+            let cash = parseInt($("#txtCash").val());
+            let subTot = parseInt($("#subtot").text());
+            $("#txtBalance").val(cash - subTot);
+        }
+    });
+
+
+
+
 
     $("#btnSubmitOrder").click(function () {
         let orderID = $("#txtOrderId").val();
@@ -518,8 +553,17 @@
             data: JSON.stringify(ob),
             contentType: "application/json",
             success: function (resp) {
+
                 alert(resp.message);
                 generateOrderID();
+                cart.splice(0, cart.length);
+                $('#orderTable').empty();
+                $("#btnSubmitOrder").attr('disabled', true);
+                $("#total>span,#subtot").text("00");
+                loadAllCustomers();
+                loadAllItems();
+
+                $("#txtItemCode,#txtItemDescription,#txtQTYOnHand,#txtQty,#orderCustomerID,#orderCustomerAddress,#orderCustomerName,#orderCustomerSalary,#txtCash,#txtBalance,#txtDiscount").val("");
             },
             error: function (error) {
                 alert(JSON.parse(error.responseText).message);
@@ -553,19 +597,19 @@
 
         } else {
             $("#orderCustomerID,#orderCustomerName,#orderCustomerSalary,#orderCustomerAddress")
-                .css("border", "3px solid limegreen");
+                .css("border", "2px solid limegreen");
         }
     }
 
     /** Error css changer */
     function Span_BorderCssChange_Error(field, massage) {
-        field.css('border', '3px solid red');
+        field.css('border', '2px solid red');
         field.parent().children('span').text(massage);
     }
 
     /** Default css changer */
     function Span_BorderCssChange_Default(field, massage) {
-        field.css('border', '3px solid #ced4da');
+        field.css('border', '2px solid lime');
         field.parent().children('span').text(massage);
     }
 
