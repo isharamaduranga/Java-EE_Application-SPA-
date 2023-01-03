@@ -527,6 +527,16 @@
     });
 
 
+    $("#txtQty").on('keyup keydown',function () {
+        let qhd = $("#txtQTYOnHand").val();
+        let typeQty= $("#txtQty").val();
+        if (typeQty > qhd) {
+            Span_BorderCssChange_Error( $('#txtQty'), "");
+        }else{
+            Span_BorderCssChange_Default( $('#txtQty'), "");
+        }
+    })
+
 
 
 
@@ -604,13 +614,13 @@
 
         if (itemCode === "Select Item") {
 
-            $("#txtItemCode,#txtItemDescription,#txtItemPrice,#txtQTYOnHand")
-                .css("border", "2px solid #ced4da");
+            $("#txtItemCode,#txtItemDescription,#txtItemPrice,#txtQTYOnHand").css("border", "2px solid #ced4da");
 
             //clear fields
             clearSetDetails($("#txtItemCode"), $("#txtItemDescription"), $("#txtItemPrice"), $("#txtQTYOnHand"));
 
         } else {
+
             $("#txtItemCode,#txtItemDescription,#txtItemPrice,#txtQTYOnHand").css("border", "2px solid limegreen");
 
         }
