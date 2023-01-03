@@ -263,6 +263,7 @@
     setDates();
     searchCustomer();
 
+
     function loadAllItems() {
         $("#selectItemCode").empty();
         $.ajax({
@@ -394,7 +395,7 @@
             }
         });
 
-
+        generateOrderID();
     });
 
     function getItemDetails() {
@@ -407,6 +408,22 @@
             array.push({code: itCode, qty: itQty, price: itPrice});
         }
         return array;
+    }
+
+    function generateOrderID() {
+        try {
+            let lastOId = order[order.length - 1].getOrdID();
+            let newOId = parseInt(lastOId.substring(4, 7)) + 1;
+            if (newOId < 10) {
+                $("#txtOrderId").val("OID-00" + newOId);
+            } else if (newOId < 100) {
+                $("#txtOrderId").val("OID-0" + newOId);
+            } else {
+                $("#txtOrderId").val("OID-" + newOId);
+            }
+        } catch (e) {
+            $("#txtOrderId").val("OID-001");
+        }
     }
 
 </script>
