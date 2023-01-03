@@ -10,11 +10,6 @@
     <link rel="stylesheet" href="styles/pos_styles.css">
     <link href="icons/css/all.min.css" rel="stylesheet">
 
-    <style>
-
-    </style>
-
-
 </head>
 <body>
 <header>
@@ -260,7 +255,7 @@
 
     let baseUrl = "http://localhost:8080/posbackend/";
 
-    //load all items from the database
+    /** Functions of running when start the  program...*/
     loadAllItems();
     loadAllCustomers();
     setDates();
@@ -269,6 +264,7 @@
     $("#btnSubmitOrder").attr('disabled', true);
     $()
 
+    /** Function of*/
     function loadAllItems() {
         /* $("#selectItemCode").empty();*/
         $("#selectItemCode").append(`<option>Select Item</option>`);
@@ -360,6 +356,7 @@
             $("#txtItemPrice").val(res[0].unitPrice);
             $("#txtQTYOnHand").val(res[0].qtyOnHand);
         }
+        textFieldColorChange_Item();
     });
 
 
@@ -599,6 +596,23 @@
         } else {
             $("#orderCustomerID,#orderCustomerName,#orderCustomerSalary,#orderCustomerAddress")
                 .css("border", "2px solid limegreen");
+        }
+    }
+
+    function textFieldColorChange_Item() {
+        let itemCode = $('#selectItemCode').val();
+
+        if (itemCode === "Select Item") {
+
+            $("#txtItemCode,#txtItemDescription,#txtItemPrice,#txtQTYOnHand")
+                .css("border", "2px solid #ced4da");
+
+            //clear fields
+            clearSetDetails($("#txtItemCode"), $("#txtItemDescription"), $("#txtItemPrice"), $("#txtQTYOnHand"));
+
+        } else {
+            $("#txtItemCode,#txtItemDescription,#txtItemPrice,#txtQTYOnHand").css("border", "2px solid limegreen");
+
         }
     }
 
