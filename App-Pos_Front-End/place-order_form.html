@@ -389,13 +389,13 @@
             contentType:"application/json",
             success: function (resp) {
                 alert(resp.message);
+                generateOrderID();
             },
             error:function (error){
                 alert(JSON.parse(error.responseText).message);
             }
         });
 
-        generateOrderID();
     });
 
     function getItemDetails() {
@@ -409,18 +409,29 @@
         }
         return array;
     }
+    generateOrderID();
 
     function generateOrderID() {
         try {
-            let lastOId = order[order.length - 1].getOrdID();
-            let newOId = parseInt(lastOId.substring(4, 7)) + 1;
-            if (newOId < 10) {
-                $("#txtOrderId").val("OID-00" + newOId);
-            } else if (newOId < 100) {
-                $("#txtOrderId").val("OID-0" + newOId);
-            } else {
-                $("#txtOrderId").val("OID-" + newOId);
-            }
+            $.ajax({
+                url:baseUrl+"OrderDetails",
+                dataType:"json",
+                success:function (resp) {
+                    for (let oder of resp.data) {
+                        let lastOId = oder.oid;
+                        let newOId = parseInt(lastOId.substring(4, 7)) + 1;
+                        if (newOId < 10) {
+                            $("#txtOrderId").val("OID-00" + newOId);
+                        } else if (newOId < 100) {
+                            $("#txtOrderId").val("OID-0" + newOId);
+                        } else {
+                            $("#txtOrderId").val("OID-" + newOId);
+                        }
+                    }
+                }
+            });
+
+
         } catch (e) {
             $("#txtOrderId").val("OID-001");
         }
