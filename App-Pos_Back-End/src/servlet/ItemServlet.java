@@ -148,6 +148,7 @@ public class ItemServlet extends HttpServlet {
             pstm.setObject(3, unitPrice);
 
             boolean isUpdated = pstm.executeUpdate() > 0;
+
             JsonObjectBuilder jsonResObj = Json.createObjectBuilder();
             if (isUpdated) {
                 jsonResObj.add("state", "done");

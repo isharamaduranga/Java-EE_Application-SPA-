@@ -372,12 +372,12 @@
                 alert("This Item Not Available for this Quantity !!!")
                 $("#txtQty").val("")
             } else {
+                updateQty();
                 addToCart();
                 loadAllCart();
 
 
                // $("#txtItemCode,#txtItemDescription,#txtQTYOnHand,#txtQty,#txtItemPrice").val("");
-                $("#selectItemCode").append(`<option>Select Item</option>`);
             }
         } else {
             alert("please Enter Order Quantity..");
@@ -416,19 +416,86 @@
     function loadAllCart() {
         $("#orderTable").empty();
         for (let cartItm of cart) {
+
             var cartRow  =`<tr><td>${cartItm.getCode()}</td><td>${cartItm.getDescription()}</td><td>${cartItm.getItemPrice()}</td><td>${cartItm.getBuyQty()}</td><td>${cartItm.getTotal()}</td></tr>`
+
             $("#orderTable").append(cartRow);
         }
-
-        /*  let code = $("#selectItemCode").val();
-          let description = $("#txtItemDescription").val();
-          let itemPrice = $("#txtItemPrice").val();
-          let buyQty = $("#txtQty").val();
-          let total = parseFloat(itemPrice) * parseFloat(buyQty);*/
-
-
     }
 
+    function updateQty() {
+        let qtyOnHand = $('#txtQTYOnHand').val();
+        let order_qty = $('#txtQty').val();
+        let newQtyValue = qtyOnHand - order_qty;
+
+        $("#itemTable").empty();
+        $.ajax({
+            url: baseUrl+"item",
+            dataType: "json",
+            success: function (resp) {
+                for (let itm of resp.data) {
+
+                    if ($("#selectItemCode").val() === itm.code) {
+
+                        setItemQty(newQtyValue);
+
+                     /*var id = getItemQty();
+
+                        $('#txtQTYOnHand').val(id);*/
+
+
+                    }
+                }
+            }
+        });
+    }
+
+    function setItemQty(newQty) {
+        let itemCode = $('#selectItemCode').val();
+        let itemName = $('#txtItemDescription').val();
+        $("#txtQTYOnHand").val(newQty);
+        let itemQty = $("#txtQTYOnHand").val();
+        let itemPrice = $('#txtItemPrice').val();
+
+        let item={
+            code:itemCode,
+            description:itemName,
+            qtyOnHand:itemQty,
+            unitPrice:itemPrice
+        }
+
+        $.ajax({
+            url: baseUrl+"item",
+            method:"put",
+            contentType:"application/json",
+            data: JSON.stringify(item),
+            dataType:"json",
+            success:function (resp) {
+                alert(resp.message);
+                loadAllItems()
+            },
+            error:function (error) {
+                alert(JSON.parse(error.responseText).message);
+            }
+        });
+    }
+
+    function getItemQty() {
+        let val = $("#selectItemCode").val();
+        $.ajax({
+            url: baseUrl+"item",
+            dataType: "json",
+            success: function (resp) {
+                for (let itm of resp.data) {
+
+                    if (itm.code == val){
+                        return itm.qtyOnHand;
+                    }
+                }
+
+            }
+        });
+    }
 
     $("#btnSubmitOrder").click(function () {
         let orderID = $("#txtOrderId").val();
