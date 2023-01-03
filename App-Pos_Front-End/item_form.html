@@ -153,6 +153,153 @@
 
     loadAllItems();
 
+    /** ==================================== D E F I N E D   V A L I D A T I O N S ===================================*/
+    /** Item regular expressions */
+    /*  Focused Item Code input field When Firstly open that page..*/
+    $('#txtItemCode').focus();
+
+    const itemCodeRegEx = /^(I00-)[0-9]{1,3}$/;
+    const itemNameRegEx = /^[A-z ]{5,20}$/;
+    const itemPriceRegEx = /^[0-9]{1,}[.]?[0-9]{1,2}$/;
+    const itemQtyRegEx = /^[0-9]{1,7}$/;
+
+    let itemValidationArray = [];
+
+    itemValidationArray.push({
+        reg: itemCodeRegEx,
+        field: $('#txtItemCode'),
+        error: 'Item Code Pattern is Wrong Format: I00-001'
+    });
+    itemValidationArray.push({
+        reg: itemNameRegEx,
+        field: $('#txtItemName'),
+        error: 'Item Name Pattern is Wrong Format: A-z 5-20'
+    });
+    itemValidationArray.push({
+        reg: itemPriceRegEx,
+        field: $('#txtItemPrice'),
+        error: 'Item Price Pattern is Wrong Format: 1000 or 1000.00'
+    });
+    itemValidationArray.push({
+        reg: itemQtyRegEx,
+        field: $('#txtItemQty'),
+        error: 'Item Qty Pattern is Wrong Format: 0-9 {0,7}'
+    });
+
+    /** Text Fields Key down to Tab & prevent Default function.. */
+    $("#txtItemCode,#txtItemName,#txtItemPrice,#txtItemQty").on('keydown', function (event) {
+        if (event.key == "Tab") {
+            event.preventDefault();
+        }
+    });
+    /** Text Fields Key Up to Check validation function.. */
+    $("#txtItemCode,#txtItemName,#txtItemPrice,#txtItemQty").on('keyup', function (event) {
+
+        checkItemValidation();
+
+    });
+    /** Text Fields blur to Check validation function.. */
+    $("#txtItemCode,#txtItemName,#txtItemPrice,#txtItemQty").on('blur', function (event) {
+        checkItemValidation();
+    });
+
+
+    /** Text Fields Key down to focus functionalities... */
+
+    $('#txtItemCode').on('keydown',function (event) {
+        if (event.key == "Enter" && checkItem(itemCodeRegEx, $("#txtItemCode"))) {
+            $("#txtItemName").focus();
+        } else {
+            $("#txtItemCode").focus();
+        }
+    });
+
+    $('#txtItemName').on('keydown',function (event) {
+        if (event.key == "Enter"  && checkItem(itemNameRegEx, $("#txtItemName"))) {
+            $('#txtItemQty').focus();
+        }
+    });
+
+    $('#txtItemQty').on('keydown',function (event) {
+        if (event.key == "Enter"  && checkItem(itemQtyRegEx, $("#txtItemQty"))) {
+            $('#txtItemPrice').focus();
+        }
+    });
+
+    $('#txtItemPrice').on('keydown',function (event) {
+        if (event.key == "Enter"  && checkItem(itemPriceRegEx, $("#txtItemPrice"))) {
+
+            let option = confirm("Do you  Want To Save Item ?");
+            if (option) {
+                saveItems();
+            }
+            $('#txtItemCode').focus();
+        }
+    });
+
+    /** function of CheckItem Validation Event  */
+    function checkItemValidation() {
+        let errorCountItem = 0;
+        for (let validateItem of itemValidationArray) {
+            if (checkItem(validateItem.reg, validateItem.field)) {
+
+                successEventItem(validateItem.field, "");
+
+            } else {
+                /* Increase error count when find a error*/
+                errorCountItem=errorCountItem+1;
+                // to write error event
+                errorEventItem(validateItem.field, validateItem.error);
+            }
+        }
+        setButtonState_Item(errorCountItem);
+    }
+
+    /** function of Check item Event  */
+    function checkItem(regex, field) {
+        if (regex.test(field.val())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /** function of Success Event  */
+    function successEventItem(textField, massage) {
+        if (textField.val().length <= 0) {
+            defaultTextItem(textField, "");
+        } else {
+            textField.css("border","2px solid #049104FF");
+            textField.parent().children('span').text(massage);
+        }
+    }
+
+    /** function of Error Event  */
+    function errorEventItem(textField, error) {
+        if (textField.val().length <= 0) {
+            defaultTextItem(textField, "");
+        } else {
+            textField.css("border","2px solid red");
+            textField.parent().children('span').text(error);
+        }
+    }
+
+    /** function of Default text */
+    function defaultTextItem(textField,text) {
+        textField.css("border", "2px solid #ced4da");
+        textField.parent().children('span').text(text);
+    }
+
+    /** function of Button State */
+    function setButtonState_Item(count) {
+        if (count>0) {
+            $("#btnItemSave").attr('disabled', true);
+        }else {
+            $("#btnItemSave").attr('disabled', false);
+        }
+    }
+    /** ================================================================================================================ */
+
     function saveItems() {
         let itmFormData = $("#itemForm").serialize();
 
@@ -274,45 +421,6 @@
         $('#txtItemPrice').val("");
         $('#txtItemQty').val("");
     }
-
-    /** Text Fields Key down to focus functionalities... */
-
-    //disable tab key of all input fields using grouping selector
-    $("#txtItemCode,#txtItemName,#txtItemPrice,#txtItemQty").keydown(function (event) {
-        if (event.key == "Tab") {
-            event.preventDefault();
-        }
-    });
-
-    $('#txtItemCode').keydown(function (event) {
-        if (event.which == 13) {
-            $('#txtItemName').focus();
-        }
-    });
-
-    $('#txtItemName').keydown(function (event) {
-        if (event.which == 13) {
-            $('#txtItemQty').focus();
-        }
-    });
-
-    $('#txtItemQty').keydown(function (event) {
-        if (event.which == 13) {
-            $('#txtItemPrice').focus();
-        }
-    });
-
-    $('#txtItemPrice').keydown(function (event) {
-        if (event.which == 13) {
-            let option = confirm("Do you  Want To Save Item ?");
-
-            if (option) {
-                saveItems()
-            }
-            $('#txtItemCode').focus();
-        }
-    });
-
 
 </script>
 
