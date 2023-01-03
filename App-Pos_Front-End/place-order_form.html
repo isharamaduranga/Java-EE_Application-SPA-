@@ -266,7 +266,8 @@
 
 
     function loadAllItems() {
-        $("#selectItemCode").empty();
+       /* $("#selectItemCode").empty();*/
+        $("#selectItemCode").append(`<option>Select Item-Code</option>`);
         $.ajax({
             url: baseUrl + "item",
             success: function (res) {
@@ -283,7 +284,7 @@
     }
 
     function loadAllCustomers() {
-        $("#selectCusID").empty();
+        $("#selectCusID").append(`<option>Select Cus-ID</option>`);
         $.ajax({
             url: baseUrl + "customer",
             dataType: "json",
