@@ -87,4 +87,16 @@ main{
 .button{
     text-align: center;
 }
+.control-error{
+    color: red ;
+    font-size: 0.9em;
+}
+
+.control-error_item{
+    color: red ;
+    font-size: 0.9em;
+}
+/*.form-label{
+    color: gold;
+}*/
 /*================ Customer page CSS Styles ==================================*/
