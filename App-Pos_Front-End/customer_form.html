@@ -160,6 +160,163 @@
     let baseURL="http://localhost:8080/posbackend/";
     loadAllCustomers();
 
+    /** ==================================== D E F I N E D   V A L I D A T I O N S ===================================*/
+    /** customer regular expressions */
+    /*  Focused customerID input field When Firstly open that page..*/
+    $('#txtCusId').focus();
+
+    const cusIdRegEx = /^(C00-)[0-9]{1,3}$/;
+    const cusNameRegEx = /^[A-z ]{5,20}$/;
+    const cusAddressRegEx = /^[0-9/A-z. ,]{7,}$/;
+    const cusSalaryRegEx = /^[0-9]{1,}[.]?[0-9]{1,2}$/;
+
+    /* Defined Validation Array */
+    let customerValidationArray = [];
+
+    /* Pushed regex pattern , related Input field Object & error massage to the Array */
+    customerValidationArray.push({
+        reg: cusIdRegEx,
+        field: $('#txtCusId'),
+        error: 'Customer ID Pattern is Wrong Format: C00-001'
+    });
+    customerValidationArray.push({
+        reg: cusNameRegEx,
+        field: $('#txtCusName'),
+        error: 'Customer Name Pattern is Wrong Format: A-z 5-20'
+    });
+    customerValidationArray.push({
+        reg: cusAddressRegEx,
+        field: $('#txtCusAddress'),
+        error: 'Customer Address Pattern is Wrong Format: A-z 0-9 ,/'
+    });
+    customerValidationArray.push({
+        reg: cusSalaryRegEx,
+        field: $('#txtCusSalary'),
+        error: 'Customer Salary Pattern is Wrong Format: 1000 or 1000.00'
+    });
+
+
+    /** Text Fields Key down to Tab & prevent Default function.. */
+    $("#txtCusId,#txtCusName,#txtCusAddress,#txtCusSalary").on('keydown', function (event) {
+        if (event.key == "Tab") {
+            event.preventDefault();
+        }
+    });
+
+    /** Text Fields Key Up to Check validation function.. */
+    $("#txtCusId,#txtCusName,#txtCusAddress,#txtCusSalary").on('keyup', function (event) {
+        checkCustomerValidation();
+
+    });
+
+    /** Text Fields blur to Check validation function.. */
+    $("#txtCusId,#txtCusName,#txtCusAddress,#txtCusSalary").on('blur', function (event) {
+        checkCustomerValidation();
+
+    });
+
+    /** Text Fields Key down to focus and validate functionalities... */
+    $("#txtCusId").on('keydown', function (event) {
+
+        if (event.key == "Enter" && check(cusIdRegEx, $("#txtCusId"))) {
+            $("#txtCusName").focus();
+        } else {
+            $("#txtCusId").focus();
+        }
+    });
+
+    $("#txtCusName").on('keydown', function (event) {
+        if (event.key == "Enter" && check(cusNameRegEx, $("#txtCusName"))) {
+            $("#txtCusAddress").focus();
+        }
+    });
+
+    $("#txtCusAddress").on('keydown', function (event) {
+        if (event.key == "Enter" && check(cusAddressRegEx, $("#txtCusAddress"))) {
+            $("#txtCusSalary").focus();
+        }
+    });
+
+    $("#txtCusSalary").on('keydown', function (event) {
+        if (event.key == "Enter" && check(cusSalaryRegEx, $('#txtCusSalary'))) {
+
+            let option = confirm("Do you  Want To Save Customer ?");
+
+            if (option) {
+                saveCustomer();
+            }
+
+            $("#txtCusId").focus();
+        }
+    });
+
+    /** function of CheckCustomer Validation Event  */
+    function checkCustomerValidation() {
+        let errorCount = 0;
+        for (let validate of customerValidationArray) {
+            if (check(validate.reg, validate.field)) {
+                // to write success event
+                successEvent(validate.field, "");
+
+
+            } else {
+                /* Increase error count when find a error*/
+                errorCount = errorCount + 1;
+                // to write error event
+                errorEvent(validate.field, validate.error)
+            }
+        }
+        setButtonState(errorCount);
+    }
+
+    /** function of Check Event  */
+    function check(regPattern, textField) {
+        if (regPattern.test(textField.val())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /** function of Success Event  */
+    function successEvent(textField, massage) {
+        if (textField.val().length <= 0) {
+            //calling default text function...
+            defaultText(textField, "");
+        } else {
+            textField.css("border", "2px solid #049104FF");
+            textField.parent().children('span').text(massage);
+        }
+    }
+
+    /** function of Error Event  */
+    function errorEvent(textField, error) {
+        if (textField.val().length <= 0) {
+            //calling default text function...
+            defaultText(textField, "");
+        } else {
+            textField.css('border', '2px solid red');
+            textField.parent().children('span').text(error);
+        }
+    }
+
+    /** function of Default text */
+    function defaultText(txtField, massage) {
+        txtField.css("border", "2px solid #ced4da");
+        txtField.parent().children('span').text(massage);
+    }
+
+    /** function of Button State */
+    function setButtonState(count) {
+        if (count > 0) {
+            $("#btnCustomerSave").attr('disabled', true);
+        } else {
+            $("#btnCustomerSave").attr('disabled', false);
+        }
+    }
+    /** ===================================================================================================  */
+
+
     function saveCustomer() {
         //send ajax request to the customer Servlet
 
@@ -285,46 +442,9 @@
         $('#txtCusSalary').val("");
     }
 
-    /** Text Fields Key down to focus functionalities... */
-    $("#txtCusId,#txtCusName,#txtCusAddress,#txtCusSalary").on('keydown', function (event) {
-        if (event.key == "Tab") {
-            event.preventDefault();
-        }
-    });
 
-    $("#txtCusId").on('keydown', function (event) {
 
-        if (event.key == "Enter") {
-            $("#txtCusName").focus();
-        }
-    });
 
-    $("#txtCusName").on('keydown', function (event) {
-        if (event.key == "Enter") {
-            $("#txtCusAddress").focus();
-        }
-    });
-
-    $("#txtCusAddress").on('keydown', function (event) {
-        if (event.key == "Enter") {
-            $("#txtCusSalary").focus();
-        }
-    });
-
-    $("#txtCusSalary").on('keydown', function (event) {
-        if (event.key == "Enter") {
-
-            let option = confirm("Do you  Want To Save Customer ?");
-
-            if (option) {
-                saveCustomer();
-            }
-
-            $("#txtCusId").focus();
-        }
-    });
-    
-    
 </script>
 
 </body>
