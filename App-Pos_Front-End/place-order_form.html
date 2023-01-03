@@ -167,6 +167,7 @@
                                     Order QTY:
                                     <form>
                                         <input class="form-control " id="txtQty" type="number">
+                                        <span class="control-error_item" id="lblCheckQty"></span>
                                     </form>
                                 </div>
                             </div>
@@ -530,7 +531,8 @@
         }
     });
 
-    /** function of txtQty button keyup,keydown event logic... */
+/*
+    /!** function of txtQty button keyup,keydown event logic... *!/
     $("#txtQty").on('keyup keydown', function () {
         let qhd = $("#txtQTYOnHand").val();
         let typeQty = $("#txtQty").val();
@@ -541,6 +543,7 @@
             Span_BorderCssChange_Default($('#txtQty'), "");
         }
     })
+*/
 
     /** function of Purchase Order logics. */
     $("#btnSubmitOrder").click(function () {
@@ -639,6 +642,23 @@
     function Span_BorderCssChange_Default(field, massage) {
         field.css('border', '2px solid lime');
         field.parent().children('span').text(massage);
+    }
+
+    $('#txtQty').on('keyup', function () {
+        orderQtyColourChange();
+    });
+
+    /** function of when change Colors with customer fields . */
+    function orderQtyColourChange() {
+        let qHand = parseInt($("#txtQTYOnHand").val());
+        let orQty = parseInt($("#txtQty").val());
+        if (qHand < orQty) {
+
+            Span_BorderCssChange_Error($('#txtQty'), "Please  Enter a Amount lower than: " + orQty + "");
+
+        } else {
+            Span_BorderCssChange_Default($('#txtQty'), "")
+        }
     }
 
     /** function of clear Details passed that fields . */
