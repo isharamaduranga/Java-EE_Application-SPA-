@@ -255,6 +255,7 @@
 <!--Import js for bootstrap-->
 <script src="assests/jquery/jquery-3.6.1.min.js"></script>
 <script src="assests/js/bootstrap.min.js"></script>
+<script src="model/cart.js"></script>
 <script>
 
     let baseUrl = "http://localhost:8080/posbackend/";
@@ -268,7 +269,7 @@
 
 
     function loadAllItems() {
-       /* $("#selectItemCode").empty();*/
+        /* $("#selectItemCode").empty();*/
         $("#selectItemCode").append(`<option>Select Item</option>`);
         $.ajax({
             url: baseUrl + "item",
@@ -362,14 +363,71 @@
 
 
     $("#btnAddToTable").click(function () {
+        let qtyOnHand = parseInt($("#txtQTYOnHand").val());
+        let orderQty = parseInt($("#txtQty").val());
+
+        if ($("#txtQty").val() != "") {
+
+            if (qtyOnHand < orderQty) {
+                alert("This Item Not Available for this Quantity !!!")
+                $("#txtQty").val("")
+            } else {
+                addToCart();
+                loadAllCart();
+
+
+               // $("#txtItemCode,#txtItemDescription,#txtQTYOnHand,#txtQty,#txtItemPrice").val("");
+                $("#selectItemCode").append(`<option>Select Item</option>`);
+            }
+        } else {
+            alert("please Enter Order Quantity..");
+        }
+
+    });
+    var cart = [];
+
+
+    function addToCart() {
 
         let code = $("#selectItemCode").val();
         let description = $("#txtItemDescription").val();
         let itemPrice = $("#txtItemPrice").val();
         let buyQty = $("#txtQty").val();
         let total = parseFloat(itemPrice) * parseFloat(buyQty);
-        $("#orderTable").append(`<tr><td>${code}</td><td>${description}</td><td>${itemPrice}</td><td>${buyQty}</td><td>${total}</td></tr>`);
-    });
+
+        for (let cartElement of cart) {
+            if (cartElement.getCode() == code) {
+                var newQty = +cartElement.getBuyQty() + +buyQty;
+                let newTotal = itemPrice * newQty;
+
+                cartElement.setBuyQty(newQty);
+                cartElement.setTotal(newTotal);
+                return;
+            }
+        }
+
+        let cartOrder = new cartModel(code, description, itemPrice, buyQty, total);
+        cart.push(cartOrder);
+
+        $("#txtBalance,#txtCash,#txtDiscount").val("");
+    }
+
+
+    function loadAllCart() {
+        $("#orderTable").empty();
+        for (let cartItm of cart) {
+            var cartRow  =`<tr><td>${cartItm.getCode()}</td><td>${cartItm.getDescription()}</td><td>${cartItm.getItemPrice()}</td><td>${cartItm.getBuyQty()}</td><td>${cartItm.getTotal()}</td></tr>`
+            $("#orderTable").append(cartRow);
+        }
+
+        /*  let code = $("#selectItemCode").val();
+          let description = $("#txtItemDescription").val();
+          let itemPrice = $("#txtItemPrice").val();
+          let buyQty = $("#txtQty").val();
+          let total = parseFloat(itemPrice) * parseFloat(buyQty);*/
+
+
+    }
 
 
     $("#btnSubmitOrder").click(function () {
@@ -378,25 +436,25 @@
         let orderDate = $("#txtDate").val();
         let orderD = getItemDetails();
 
-        let ob={
-            oid:orderID,
-            date:orderDate,
-            cusID:customerID,
-            orderDetails:orderD
+        let ob = {
+            oid: orderID,
+            date: orderDate,
+            cusID: customerID,
+            orderDetails: orderD
         }
 
         //send request
         $.ajax({
             url: baseUrl + "purchase",
-            method:"post",
+            method: "post",
             dataType: "json",
-            data:JSON.stringify(ob),
-            contentType:"application/json",
+            data: JSON.stringify(ob),
+            contentType: "application/json",
             success: function (resp) {
                 alert(resp.message);
                 generateOrderID();
             },
-            error:function (error){
+            error: function (error) {
                 alert(JSON.parse(error.responseText).message);
             }
         });
@@ -414,7 +472,6 @@
         }
         return array;
     }
-
 
 
     function textFieldColorChange_customer() {
@@ -454,10 +511,10 @@
         let orQty = parseInt($("#txtQty").val());
         if (qHand < orQty) {
 
-            Span_BorderCssChange_Error($('#txtQty') , "Please  Enter a Amount lower than: " + orQty + "");
+            Span_BorderCssChange_Error($('#txtQty'), "Please  Enter a Amount lower than: " + orQty + "");
 
         } else {
-            Span_BorderCssChange_Default($('#txtQty'),"")
+            Span_BorderCssChange_Default($('#txtQty'), "")
         }
     }
 
@@ -469,35 +526,12 @@
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     function generateOrderID() {
         try {
             $.ajax({
-                url:baseUrl+"OrderDetails",
-                dataType:"json",
-                success:function (resp) {
+                url: baseUrl + "OrderDetails",
+                dataType: "json",
+                success: function (resp) {
                     for (let oder of resp.data) {
                         let lastOId = oder.oid;
                         let newOId = parseInt(lastOId.substring(4, 7)) + 1;
